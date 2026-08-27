@@ -1,16 +1,25 @@
 {
   "name": "agent_sorra",
+  "type": "module",
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "contract:emit": "prisma contract emit"
   },
   "dependencies": {
     "@elysia/openapi": "^1.4.15",
+    "@prisma/orm-postgres": "^8.0.0-rc.8",
+    "dotenv": "^17.4.2",
     "elysia": "latest"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@prisma/cli-engine": "0.2.3",
+    "@types/node": "^26.4.0",
+    "bun-types": "latest",
+    "prisma": "^8.0.0-rc.10",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
   },
   "module": "src/index.js"
 }
