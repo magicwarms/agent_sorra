@@ -6,4 +6,5 @@ export const prisma = new PrismaClient({
       ? ["query", "error", "warn"]
       : ["warn", "error"],
   errorFormat: "pretty",
+  accelerateUrl: process.env.DATABASE_URL,
 });

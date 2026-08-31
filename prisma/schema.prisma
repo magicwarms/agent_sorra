@@ -21,6 +21,8 @@ model User {
     updatedAt DateTime @updatedAt
 
     threads Thread[]
+
+    @@map("users")
 }
 
 model Thread {
@@ -30,6 +32,9 @@ model Thread {
     createdAt DateTime  @default(now())
     user      User      @relation(fields: [userId], references: [id])
     messages  Message[]
+
+    @@index([userId])
+    @@map("threads")
 }
 
 model Message {
@@ -39,4 +44,7 @@ model Message {
     role      Role
     createdAt DateTime @default(now())
     thread    Thread   @relation(fields: [threadId], references: [id])
+
+    @@index([threadId])
+    @@map("messages")
 }
