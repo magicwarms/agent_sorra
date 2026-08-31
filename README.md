@@ -1,15 +1,19 @@
-# Elysia with Bun runtime
-
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
-```bash
-bun create elysia ./elysia-example
-```
+# Agent Sorra
 
 ## Development
-To start the development server run:
+
 ```bash
+bun install
 bun run dev
 ```
 
-Open http://localhost:9000/v1/docs with your browser to see the Scalar API documentation.
+Open http://localhost:9000/v1/docs to view the API docs.
+
+## Prisma 7
+
+```bash
+bunx prisma generate
+bunx prisma db push
+```
+
+Set DATABASE_URL in the .env file before running Prisma commands.

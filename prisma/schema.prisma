@@ -1,0 +1,41 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum Role {
+    USER
+    ASSISTANT
+}
+
+model User {
+    id        Int      @id @default(autoincrement())
+    email     String   @unique
+    username  String?
+    name      String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    threads Thread[]
+}
+
+model Thread {
+    id        Int       @id @default(autoincrement())
+    title     String    @unique
+    userId    Int
+    createdAt DateTime  @default(now())
+    user      User      @relation(fields: [userId], references: [id])
+    messages  Message[]
+}
+
+model Message {
+    id        String   @id @default(uuid(7))
+    threadId  Int
+    content   String
+    role      Role
+    createdAt DateTime @default(now())
+    thread    Thread   @relation(fields: [threadId], references: [id])
+}

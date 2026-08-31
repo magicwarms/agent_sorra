@@ -5,20 +5,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "contract:emit": "prisma contract emit"
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@elysia/openapi": "^1.4.15",
-    "@prisma/orm-postgres": "^8.0.0-rc.8",
+    "@prisma/client": "^7.10.0",
     "dotenv": "^17.4.2",
     "elysia": "latest"
   },
   "devDependencies": {
-    "@prisma/cli-engine": "0.2.3",
     "@types/node": "^26.4.0",
     "bun-types": "latest",
-    "prisma": "^8.0.0-rc.10",
-    "tsx": "^4.23.12",
+    "prisma": "^7.10.0",
+    "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },
   "module": "src/index.js"
