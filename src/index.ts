@@ -41,6 +41,25 @@ app.use(
       process.env.NODE_ENV === "production"
         ? "dist/index.d.ts"
         : "src/index.ts",
+      {
+        compilerOptions: {
+          target: "ES2021",
+          module: "preserve",
+          moduleResolution: "bundler",
+          declaration: true,
+          emitDeclarationOnly: true,
+          noEmit: false,
+          rootDir: `${process.cwd()}/src`,
+          outDir: `${process.cwd()}/docs`,
+          typeRoots: [
+            `${process.cwd()}/node_modules/@types`,
+            `${process.cwd()}/node_modules`,
+          ],
+          skipLibCheck: true,
+          skipDefaultLibCheck: true,
+        },
+        overrideOutputPath: () => `${process.cwd()}/docs/index.d.ts`,
+      },
     ),
   }),
 );
