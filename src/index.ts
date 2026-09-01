@@ -1,6 +1,7 @@
 import { Elysia, t } from "elysia";
 import { fromTypes, openapi } from "@elysia/openapi";
 import { healthController } from "./health/health.controller";
+import { checkDatabaseConnection } from "./health/health.service";
 
 const app = new Elysia({
   prefix: "/v1",
@@ -65,6 +66,8 @@ app.use(
 );
 
 app.use(healthController);
+
+checkDatabaseConnection();
 
 app.listen(9000);
 

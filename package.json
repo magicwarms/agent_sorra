@@ -15,16 +15,20 @@
     "@langchain/langgraph": "^1.4.13",
     "@langchain/langgraph-checkpoint-postgres": "^1.0.5",
     "@langchain/openai": "^1.5.10",
-    "@prisma/client": "^7.10.0",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "7.10.0",
+    "better-auth": "^1.7.2",
     "dotenv": "^17.4.2",
     "elysia": "latest",
     "langchain": "^1.5.10",
-    "pg": "^8.23.0"
+    "pg": "^8.23.0",
+    "prismabox": "^1.1.26"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
+    "@types/pg": "^8.23.1",
     "bun-types": "latest",
-    "prisma": "^7.10.0",
+    "prisma": "7.10.0",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },
