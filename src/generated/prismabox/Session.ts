@@ -4,17 +4,21 @@ import { __transformDate__ } from "./__transformDate__";
 
 import { __nullable__ } from "./__nullable__";
 
-export const ThreadPlain = t.Object(
+export const SessionPlain = t.Object(
   {
-    id: t.Integer(),
-    title: t.String(),
-    userId: t.Integer(),
+    id: t.String(),
+    expiresAt: t.Date(),
+    token: t.String(),
     createdAt: t.Date(),
+    updatedAt: t.Date(),
+    ipAddress: __nullable__(t.String()),
+    userAgent: __nullable__(t.String()),
+    userId: t.Integer(),
   },
   { additionalProperties: false },
 );
 
-export const ThreadRelations = t.Object(
+export const SessionRelations = t.Object(
   {
     user: t.Object(
       {
@@ -30,36 +34,31 @@ export const ThreadRelations = t.Object(
       },
       { additionalProperties: false },
     ),
-    messages: t.Array(
-      t.Object(
-        {
-          id: t.String(),
-          threadId: t.Integer(),
-          content: t.String(),
-          role: t.Union([t.Literal("USER"), t.Literal("ASSISTANT")], {
-            additionalProperties: false,
-          }),
-          createdAt: t.Date(),
-        },
-        { additionalProperties: false },
-      ),
-      { additionalProperties: false },
-    ),
   },
   { additionalProperties: false },
 );
 
-export const ThreadPlainInputCreate = t.Object(
-  { title: t.String() },
+export const SessionPlainInputCreate = t.Object(
+  {
+    expiresAt: t.Date(),
+    token: t.String(),
+    ipAddress: t.Optional(__nullable__(t.String())),
+    userAgent: t.Optional(__nullable__(t.String())),
+  },
   { additionalProperties: false },
 );
 
-export const ThreadPlainInputUpdate = t.Object(
-  { title: t.Optional(t.String()) },
+export const SessionPlainInputUpdate = t.Object(
+  {
+    expiresAt: t.Optional(t.Date()),
+    token: t.Optional(t.String()),
+    ipAddress: t.Optional(__nullable__(t.String())),
+    userAgent: t.Optional(__nullable__(t.String())),
+  },
   { additionalProperties: false },
 );
 
-export const ThreadRelationsInputCreate = t.Object(
+export const SessionRelationsInputCreate = t.Object(
   {
     user: t.Object(
       {
@@ -72,27 +71,11 @@ export const ThreadRelationsInputCreate = t.Object(
       },
       { additionalProperties: false },
     ),
-    messages: t.Optional(
-      t.Object(
-        {
-          connect: t.Array(
-            t.Object(
-              {
-                id: t.String({ additionalProperties: false }),
-              },
-              { additionalProperties: false },
-            ),
-            { additionalProperties: false },
-          ),
-        },
-        { additionalProperties: false },
-      ),
-    ),
   },
   { additionalProperties: false },
 );
 
-export const ThreadRelationsInputUpdate = t.Partial(
+export const SessionRelationsInputUpdate = t.Partial(
   t.Object(
     {
       user: t.Object(
@@ -106,37 +89,12 @@ export const ThreadRelationsInputUpdate = t.Partial(
         },
         { additionalProperties: false },
       ),
-      messages: t.Partial(
-        t.Object(
-          {
-            connect: t.Array(
-              t.Object(
-                {
-                  id: t.String({ additionalProperties: false }),
-                },
-                { additionalProperties: false },
-              ),
-              { additionalProperties: false },
-            ),
-            disconnect: t.Array(
-              t.Object(
-                {
-                  id: t.String({ additionalProperties: false }),
-                },
-                { additionalProperties: false },
-              ),
-              { additionalProperties: false },
-            ),
-          },
-          { additionalProperties: false },
-        ),
-      ),
     },
     { additionalProperties: false },
   ),
 );
 
-export const ThreadWhere = t.Partial(
+export const SessionWhere = t.Partial(
   t.Recursive(
     (Self) =>
       t.Object(
@@ -144,30 +102,34 @@ export const ThreadWhere = t.Partial(
           AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
           NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
           OR: t.Array(Self, { additionalProperties: false }),
-          id: t.Integer(),
-          title: t.String(),
-          userId: t.Integer(),
+          id: t.String(),
+          expiresAt: t.Date(),
+          token: t.String(),
           createdAt: t.Date(),
+          updatedAt: t.Date(),
+          ipAddress: t.String(),
+          userAgent: t.String(),
+          userId: t.Integer(),
         },
         { additionalProperties: false },
       ),
-    { $id: "Thread" },
+    { $id: "Session" },
   ),
 );
 
-export const ThreadWhereUnique = t.Recursive(
+export const SessionWhereUnique = t.Recursive(
   (Self) =>
     t.Intersect(
       [
         t.Partial(
           t.Object(
-            { id: t.Integer(), title: t.String() },
+            { id: t.String(), token: t.String() },
             { additionalProperties: false },
           ),
           { additionalProperties: false },
         ),
         t.Union(
-          [t.Object({ id: t.Integer() }), t.Object({ title: t.String() })],
+          [t.Object({ id: t.String() }), t.Object({ token: t.String() })],
           { additionalProperties: false },
         ),
         t.Partial(
@@ -187,10 +149,14 @@ export const ThreadWhereUnique = t.Recursive(
         t.Partial(
           t.Object(
             {
-              id: t.Integer(),
-              title: t.String(),
-              userId: t.Integer(),
+              id: t.String(),
+              expiresAt: t.Date(),
+              token: t.String(),
               createdAt: t.Date(),
+              updatedAt: t.Date(),
+              ipAddress: t.String(),
+              userAgent: t.String(),
+              userId: t.Integer(),
             },
             { additionalProperties: false },
           ),
@@ -198,44 +164,59 @@ export const ThreadWhereUnique = t.Recursive(
       ],
       { additionalProperties: false },
     ),
-  { $id: "Thread" },
+  { $id: "Session" },
 );
 
-export const ThreadSelect = t.Partial(
+export const SessionSelect = t.Partial(
   t.Object(
     {
       id: t.Boolean(),
-      title: t.Boolean(),
-      userId: t.Boolean(),
+      expiresAt: t.Boolean(),
+      token: t.Boolean(),
       createdAt: t.Boolean(),
+      updatedAt: t.Boolean(),
+      ipAddress: t.Boolean(),
+      userAgent: t.Boolean(),
+      userId: t.Boolean(),
       user: t.Boolean(),
-      messages: t.Boolean(),
       _count: t.Boolean(),
     },
     { additionalProperties: false },
   ),
 );
 
-export const ThreadInclude = t.Partial(
+export const SessionInclude = t.Partial(
   t.Object(
-    { user: t.Boolean(), messages: t.Boolean(), _count: t.Boolean() },
+    { user: t.Boolean(), _count: t.Boolean() },
     { additionalProperties: false },
   ),
 );
 
-export const ThreadOrderBy = t.Partial(
+export const SessionOrderBy = t.Partial(
   t.Object(
     {
       id: t.Union([t.Literal("asc"), t.Literal("desc")], {
         additionalProperties: false,
       }),
-      title: t.Union([t.Literal("asc"), t.Literal("desc")], {
+      expiresAt: t.Union([t.Literal("asc"), t.Literal("desc")], {
         additionalProperties: false,
       }),
-      userId: t.Union([t.Literal("asc"), t.Literal("desc")], {
+      token: t.Union([t.Literal("asc"), t.Literal("desc")], {
         additionalProperties: false,
       }),
       createdAt: t.Union([t.Literal("asc"), t.Literal("desc")], {
+        additionalProperties: false,
+      }),
+      updatedAt: t.Union([t.Literal("asc"), t.Literal("desc")], {
+        additionalProperties: false,
+      }),
+      ipAddress: t.Union([t.Literal("asc"), t.Literal("desc")], {
+        additionalProperties: false,
+      }),
+      userAgent: t.Union([t.Literal("asc"), t.Literal("desc")], {
+        additionalProperties: false,
+      }),
+      userId: t.Union([t.Literal("asc"), t.Literal("desc")], {
         additionalProperties: false,
       }),
     },
@@ -243,16 +224,16 @@ export const ThreadOrderBy = t.Partial(
   ),
 );
 
-export const Thread = t.Composite([ThreadPlain, ThreadRelations], {
+export const Session = t.Composite([SessionPlain, SessionRelations], {
   additionalProperties: false,
 });
 
-export const ThreadInputCreate = t.Composite(
-  [ThreadPlainInputCreate, ThreadRelationsInputCreate],
+export const SessionInputCreate = t.Composite(
+  [SessionPlainInputCreate, SessionRelationsInputCreate],
   { additionalProperties: false },
 );
 
-export const ThreadInputUpdate = t.Composite(
-  [ThreadPlainInputUpdate, ThreadRelationsInputUpdate],
+export const SessionInputUpdate = t.Composite(
+  [SessionPlainInputUpdate, SessionRelationsInputUpdate],
   { additionalProperties: false },
 );
