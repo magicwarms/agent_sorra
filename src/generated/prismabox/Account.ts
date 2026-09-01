@@ -145,6 +145,7 @@ export const AccountWhereUnique = t.Recursive(
           t.Object(
             {
               id: t.String(),
+              userId: t.Integer(),
               issuer_accountId: t.Object(
                 { issuer: t.String(), accountId: t.String() },
                 { additionalProperties: false },
@@ -157,6 +158,7 @@ export const AccountWhereUnique = t.Recursive(
         t.Union(
           [
             t.Object({ id: t.String() }),
+            t.Object({ userId: t.Integer() }),
             t.Object({
               issuer_accountId: t.Object(
                 { issuer: t.String(), accountId: t.String() },

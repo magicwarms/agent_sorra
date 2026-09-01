@@ -7,6 +7,7 @@ export default betterAuth({
   appName: "AGENT-SORRA",
   database: prismaAdapter(prisma, {
     provider: "postgresql",
+    usePlural: true,
   }),
   emailAndPassword: {
     enabled: true,

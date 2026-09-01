@@ -21,23 +21,7 @@ export const UserPlain = t.Object(
 
 export const UserRelations = t.Object(
   {
-    sessions: t.Array(
-      t.Object(
-        {
-          id: t.String(),
-          expiresAt: t.Date(),
-          token: t.String(),
-          createdAt: t.Date(),
-          updatedAt: t.Date(),
-          ipAddress: __nullable__(t.String()),
-          userAgent: __nullable__(t.String()),
-          userId: t.Integer(),
-        },
-        { additionalProperties: false },
-      ),
-      { additionalProperties: false },
-    ),
-    accounts: t.Array(
+    account: __nullable__(
       t.Object(
         {
           id: t.String(),
@@ -54,6 +38,21 @@ export const UserRelations = t.Object(
           password: __nullable__(t.String()),
           createdAt: t.Date(),
           updatedAt: t.Date(),
+        },
+        { additionalProperties: false },
+      ),
+    ),
+    sessions: t.Array(
+      t.Object(
+        {
+          id: t.String(),
+          expiresAt: t.Date(),
+          token: t.String(),
+          createdAt: t.Date(),
+          updatedAt: t.Date(),
+          ipAddress: __nullable__(t.String()),
+          userAgent: __nullable__(t.String()),
+          userId: t.Integer(),
         },
         { additionalProperties: false },
       ),
@@ -101,23 +100,20 @@ export const UserPlainInputUpdate = t.Object(
 
 export const UserRelationsInputCreate = t.Object(
   {
-    sessions: t.Optional(
+    account: t.Optional(
       t.Object(
         {
-          connect: t.Array(
-            t.Object(
-              {
-                id: t.String({ additionalProperties: false }),
-              },
-              { additionalProperties: false },
-            ),
+          connect: t.Object(
+            {
+              id: t.String({ additionalProperties: false }),
+            },
             { additionalProperties: false },
           ),
         },
         { additionalProperties: false },
       ),
     ),
-    accounts: t.Optional(
+    sessions: t.Optional(
       t.Object(
         {
           connect: t.Array(
@@ -156,32 +152,21 @@ export const UserRelationsInputCreate = t.Object(
 export const UserRelationsInputUpdate = t.Partial(
   t.Object(
     {
-      sessions: t.Partial(
+      account: t.Partial(
         t.Object(
           {
-            connect: t.Array(
-              t.Object(
-                {
-                  id: t.String({ additionalProperties: false }),
-                },
-                { additionalProperties: false },
-              ),
+            connect: t.Object(
+              {
+                id: t.String({ additionalProperties: false }),
+              },
               { additionalProperties: false },
             ),
-            disconnect: t.Array(
-              t.Object(
-                {
-                  id: t.String({ additionalProperties: false }),
-                },
-                { additionalProperties: false },
-              ),
-              { additionalProperties: false },
-            ),
+            disconnect: t.Boolean(),
           },
           { additionalProperties: false },
         ),
       ),
-      accounts: t.Partial(
+      sessions: t.Partial(
         t.Object(
           {
             connect: t.Array(
@@ -323,8 +308,8 @@ export const UserSelect = t.Partial(
       displayUsername: t.Boolean(),
       createdAt: t.Boolean(),
       updatedAt: t.Boolean(),
+      account: t.Boolean(),
       sessions: t.Boolean(),
-      accounts: t.Boolean(),
       threads: t.Boolean(),
       _count: t.Boolean(),
     },
@@ -335,8 +320,8 @@ export const UserSelect = t.Partial(
 export const UserInclude = t.Partial(
   t.Object(
     {
+      account: t.Boolean(),
       sessions: t.Boolean(),
-      accounts: t.Boolean(),
       threads: t.Boolean(),
       _count: t.Boolean(),
     },

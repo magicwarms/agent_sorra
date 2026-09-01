@@ -30,10 +30,11 @@ model User {
     displayUsername String?
     createdAt       DateTime  @default(now())
     updatedAt       DateTime  @updatedAt
+    account         Account?
     sessions        Session[]
-    accounts        Account[]
     threads         Thread[]
 
+    @@index([email])
     @@map("users")
 }
 
@@ -73,7 +74,7 @@ model Session {
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([token])
-    @@index([userId])
+    @@index([userId, token])
     @@map("session")
 }
 
@@ -95,6 +96,7 @@ model Account {
     updatedAt             DateTime  @updatedAt
 
     @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
+    @@unique([userId])
     @@index([userId])
     @@map("account")
 }
