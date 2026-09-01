@@ -1,3 +1,4 @@
+import { randomUUIDv7 } from "bun";
 import { t } from "elysia";
 
 export const standardResponse = {
@@ -7,3 +8,7 @@ export const standardResponse = {
     message: t.Optional(t.String()),
   }),
 } as const;
+
+export const generateConversationId = () => {
+  return randomUUIDv7("base64", new Date());
+};
