@@ -16,7 +16,6 @@ export const signInUser = async (
   data: LoginUserType,
   requestHeaders: Record<string, string | undefined>,
 ) => {
-  console.log({ HEADERS: toWebHeaders(requestHeaders) });
   return await auth.api.signInEmail({
     body: {
       email: data.email,

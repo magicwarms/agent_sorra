@@ -71,7 +71,7 @@ userController
         },
         headers,
       );
-      console.log({ login });
+
       return {
         success: true,
         message: "Login user successfull",

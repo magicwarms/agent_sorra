@@ -13,11 +13,5 @@ export const loginUser = async (
   data: LoginUserType,
   headers: Record<string, string | undefined>,
 ) => {
-  const login = await signInUser(data, headers);
-  console.log({ loginSVC: login });
-  if (!login) {
-    throw new ElysiaError("Email atau password salah", 401);
-  }
-
-  return login;
+  return await signInUser(data, headers);
 };

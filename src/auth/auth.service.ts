@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "../lib/prisma";
-import { username } from "better-auth/plugins";
+import { username, bearer } from "better-auth/plugins";
 import { randomUUIDv7 } from "bun";
 
 export default betterAuth({
@@ -12,6 +12,19 @@ export default betterAuth({
   }),
   user: {
     modelName: "User",
+  },
+  account: {
+    modelName: "Account",
+    fields: {
+      userId: "userId",
+    },
+    encryptOAuthTokens: true, // Encrypt OAuth tokens before storing them in the database
+    storeStateStrategy: "database", // Store OAuth state payload in verification storage
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["email-password"], // or async (request) => ["google", "github"]
+      allowDifferentEmails: false,
+    },
   },
   emailAndPassword: {
     minPasswordLength: 8,
@@ -44,6 +57,7 @@ export default betterAuth({
         displayUsername: "post-normalization",
       },
     }),
+    bearer(),
   ],
   advanced: {
     database: {
