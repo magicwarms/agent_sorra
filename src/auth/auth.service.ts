@@ -22,7 +22,29 @@ export default betterAuth({
     max: 50,
     storage: "database",
   },
-  plugins: [username()],
+  disabledPaths: ["/is-username-available"],
+  plugins: [
+    username({
+      minUsernameLength: 5,
+      maxUsernameLength: 100,
+      usernameValidator: (username) => {
+        if (username === "admin" || username === "administrator") {
+          return false;
+        }
+        return true;
+      },
+      displayUsernameValidator: (displayUsername) => {
+        // Allow only alphanumeric characters, underscores, and hyphens
+        return /^[a-zA-Z0-9_-]+$/.test(displayUsername);
+      },
+      displayUsernameNormalization: (displayUsername) =>
+        displayUsername.toLowerCase(),
+      validationOrder: {
+        username: "post-normalization",
+        displayUsername: "post-normalization",
+      },
+    }),
+  ],
   advanced: {
     database: {
       generateId: () => randomUUIDv7(),

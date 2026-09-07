@@ -12,3 +12,10 @@ export const standardResponse = {
 export const generateConversationId = () => {
   return randomUUIDv7("base64", new Date());
 };
+
+export const toWebHeaders = (headers: Record<string, string | undefined>) =>
+  new Headers(
+    Object.entries(headers).flatMap(([key, value]) =>
+      value === undefined ? [] : [[key, value] as [string, string]],
+    ),
+  );
