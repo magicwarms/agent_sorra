@@ -5,5 +5,6 @@ export * from "./Message";
 export * from "./Session";
 export * from "./Account";
 export * from "./Verification";
+export * from "./RateLimit";
 export * from "./__nullable__";
 export * from "./__transformDate__";

@@ -7,7 +7,7 @@ import { __nullable__ } from "./__nullable__";
 export const MessagePlain = t.Object(
   {
     id: t.String(),
-    threadId: t.Integer(),
+    threadId: t.String(),
     content: t.String(),
     role: t.Union([t.Literal("USER"), t.Literal("ASSISTANT")], {
       additionalProperties: false,
@@ -21,9 +21,9 @@ export const MessageRelations = t.Object(
   {
     thread: t.Object(
       {
-        id: t.Integer(),
+        id: t.String(),
         title: t.String(),
-        userId: t.Integer(),
+        userId: t.String(),
         createdAt: t.Date(),
       },
       { additionalProperties: false },
@@ -60,7 +60,7 @@ export const MessageRelationsInputCreate = t.Object(
       {
         connect: t.Object(
           {
-            id: t.Integer({ additionalProperties: false }),
+            id: t.String({ additionalProperties: false }),
           },
           { additionalProperties: false },
         ),
@@ -78,7 +78,7 @@ export const MessageRelationsInputUpdate = t.Partial(
         {
           connect: t.Object(
             {
-              id: t.Integer({ additionalProperties: false }),
+              id: t.String({ additionalProperties: false }),
             },
             { additionalProperties: false },
           ),
@@ -99,7 +99,7 @@ export const MessageWhere = t.Partial(
           NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
           OR: t.Array(Self, { additionalProperties: false }),
           id: t.String(),
-          threadId: t.Integer(),
+          threadId: t.String(),
           content: t.String(),
           role: t.Union([t.Literal("USER"), t.Literal("ASSISTANT")], {
             additionalProperties: false,
@@ -141,7 +141,7 @@ export const MessageWhereUnique = t.Recursive(
           t.Object(
             {
               id: t.String(),
-              threadId: t.Integer(),
+              threadId: t.String(),
               content: t.String(),
               role: t.Union([t.Literal("USER"), t.Literal("ASSISTANT")], {
                 additionalProperties: false,

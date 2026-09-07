@@ -13,7 +13,7 @@ export const SessionPlain = t.Object(
     updatedAt: t.Date(),
     ipAddress: __nullable__(t.String()),
     userAgent: __nullable__(t.String()),
-    userId: t.Integer(),
+    userId: t.String(),
   },
   { additionalProperties: false },
 );
@@ -22,7 +22,7 @@ export const SessionRelations = t.Object(
   {
     user: t.Object(
       {
-        id: t.Integer(),
+        id: t.String(),
         email: t.String(),
         username: __nullable__(t.String()),
         name: __nullable__(t.String()),
@@ -64,7 +64,7 @@ export const SessionRelationsInputCreate = t.Object(
       {
         connect: t.Object(
           {
-            id: t.Integer({ additionalProperties: false }),
+            id: t.String({ additionalProperties: false }),
           },
           { additionalProperties: false },
         ),
@@ -82,7 +82,7 @@ export const SessionRelationsInputUpdate = t.Partial(
         {
           connect: t.Object(
             {
-              id: t.Integer({ additionalProperties: false }),
+              id: t.String({ additionalProperties: false }),
             },
             { additionalProperties: false },
           ),
@@ -109,7 +109,7 @@ export const SessionWhere = t.Partial(
           updatedAt: t.Date(),
           ipAddress: t.String(),
           userAgent: t.String(),
-          userId: t.Integer(),
+          userId: t.String(),
         },
         { additionalProperties: false },
       ),
@@ -156,7 +156,7 @@ export const SessionWhereUnique = t.Recursive(
               updatedAt: t.Date(),
               ipAddress: t.String(),
               userAgent: t.String(),
-              userId: t.Integer(),
+              userId: t.String(),
             },
             { additionalProperties: false },
           ),

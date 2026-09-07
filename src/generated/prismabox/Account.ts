@@ -7,10 +7,10 @@ import { __nullable__ } from "./__nullable__";
 export const AccountPlain = t.Object(
   {
     id: t.String(),
-    issuer: t.String(),
+    issuer: __nullable__(t.String()),
     accountId: t.String(),
     providerId: t.String(),
-    userId: t.Integer(),
+    userId: t.String(),
     accessToken: __nullable__(t.String()),
     refreshToken: __nullable__(t.String()),
     idToken: __nullable__(t.String()),
@@ -28,7 +28,7 @@ export const AccountRelations = t.Object(
   {
     user: t.Object(
       {
-        id: t.Integer(),
+        id: t.String(),
         email: t.String(),
         username: __nullable__(t.String()),
         name: __nullable__(t.String()),
@@ -46,7 +46,7 @@ export const AccountRelations = t.Object(
 
 export const AccountPlainInputCreate = t.Object(
   {
-    issuer: t.String(),
+    issuer: t.Optional(__nullable__(t.String())),
     accessToken: t.Optional(__nullable__(t.String())),
     refreshToken: t.Optional(__nullable__(t.String())),
     idToken: t.Optional(__nullable__(t.String())),
@@ -60,7 +60,7 @@ export const AccountPlainInputCreate = t.Object(
 
 export const AccountPlainInputUpdate = t.Object(
   {
-    issuer: t.Optional(t.String()),
+    issuer: t.Optional(__nullable__(t.String())),
     accessToken: t.Optional(__nullable__(t.String())),
     refreshToken: t.Optional(__nullable__(t.String())),
     idToken: t.Optional(__nullable__(t.String())),
@@ -78,7 +78,7 @@ export const AccountRelationsInputCreate = t.Object(
       {
         connect: t.Object(
           {
-            id: t.Integer({ additionalProperties: false }),
+            id: t.String({ additionalProperties: false }),
           },
           { additionalProperties: false },
         ),
@@ -96,7 +96,7 @@ export const AccountRelationsInputUpdate = t.Partial(
         {
           connect: t.Object(
             {
-              id: t.Integer({ additionalProperties: false }),
+              id: t.String({ additionalProperties: false }),
             },
             { additionalProperties: false },
           ),
@@ -120,7 +120,7 @@ export const AccountWhere = t.Partial(
           issuer: t.String(),
           accountId: t.String(),
           providerId: t.String(),
-          userId: t.Integer(),
+          userId: t.String(),
           accessToken: t.String(),
           refreshToken: t.String(),
           idToken: t.String(),
@@ -145,9 +145,8 @@ export const AccountWhereUnique = t.Recursive(
           t.Object(
             {
               id: t.String(),
-              userId: t.Integer(),
-              issuer_accountId: t.Object(
-                { issuer: t.String(), accountId: t.String() },
+              providerId_accountId: t.Object(
+                { providerId: t.String(), accountId: t.String() },
                 { additionalProperties: false },
               ),
             },
@@ -158,10 +157,9 @@ export const AccountWhereUnique = t.Recursive(
         t.Union(
           [
             t.Object({ id: t.String() }),
-            t.Object({ userId: t.Integer() }),
             t.Object({
-              issuer_accountId: t.Object(
-                { issuer: t.String(), accountId: t.String() },
+              providerId_accountId: t.Object(
+                { providerId: t.String(), accountId: t.String() },
                 { additionalProperties: false },
               ),
             }),
@@ -189,7 +187,7 @@ export const AccountWhereUnique = t.Recursive(
               issuer: t.String(),
               accountId: t.String(),
               providerId: t.String(),
-              userId: t.Integer(),
+              userId: t.String(),
               accessToken: t.String(),
               refreshToken: t.String(),
               idToken: t.String(),

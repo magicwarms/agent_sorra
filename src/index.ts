@@ -71,7 +71,7 @@ app.use(userController);
 
 checkDatabaseConnection();
 
-app.listen(9000);
+app.listen(9001);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,

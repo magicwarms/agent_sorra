@@ -6,7 +6,7 @@ import { __nullable__ } from "./__nullable__";
 
 export const UserPlain = t.Object(
   {
-    id: t.Integer(),
+    id: t.String(),
     email: t.String(),
     username: __nullable__(t.String()),
     name: __nullable__(t.String()),
@@ -21,14 +21,14 @@ export const UserPlain = t.Object(
 
 export const UserRelations = t.Object(
   {
-    account: __nullable__(
+    accounts: t.Array(
       t.Object(
         {
           id: t.String(),
-          issuer: t.String(),
+          issuer: __nullable__(t.String()),
           accountId: t.String(),
           providerId: t.String(),
-          userId: t.Integer(),
+          userId: t.String(),
           accessToken: __nullable__(t.String()),
           refreshToken: __nullable__(t.String()),
           idToken: __nullable__(t.String()),
@@ -41,6 +41,7 @@ export const UserRelations = t.Object(
         },
         { additionalProperties: false },
       ),
+      { additionalProperties: false },
     ),
     sessions: t.Array(
       t.Object(
@@ -52,7 +53,7 @@ export const UserRelations = t.Object(
           updatedAt: t.Date(),
           ipAddress: __nullable__(t.String()),
           userAgent: __nullable__(t.String()),
-          userId: t.Integer(),
+          userId: t.String(),
         },
         { additionalProperties: false },
       ),
@@ -61,9 +62,9 @@ export const UserRelations = t.Object(
     threads: t.Array(
       t.Object(
         {
-          id: t.Integer(),
+          id: t.String(),
           title: t.String(),
-          userId: t.Integer(),
+          userId: t.String(),
           createdAt: t.Date(),
         },
         { additionalProperties: false },
@@ -100,13 +101,16 @@ export const UserPlainInputUpdate = t.Object(
 
 export const UserRelationsInputCreate = t.Object(
   {
-    account: t.Optional(
+    accounts: t.Optional(
       t.Object(
         {
-          connect: t.Object(
-            {
-              id: t.String({ additionalProperties: false }),
-            },
+          connect: t.Array(
+            t.Object(
+              {
+                id: t.String({ additionalProperties: false }),
+              },
+              { additionalProperties: false },
+            ),
             { additionalProperties: false },
           ),
         },
@@ -135,7 +139,7 @@ export const UserRelationsInputCreate = t.Object(
           connect: t.Array(
             t.Object(
               {
-                id: t.Integer({ additionalProperties: false }),
+                id: t.String({ additionalProperties: false }),
               },
               { additionalProperties: false },
             ),
@@ -152,16 +156,27 @@ export const UserRelationsInputCreate = t.Object(
 export const UserRelationsInputUpdate = t.Partial(
   t.Object(
     {
-      account: t.Partial(
+      accounts: t.Partial(
         t.Object(
           {
-            connect: t.Object(
-              {
-                id: t.String({ additionalProperties: false }),
-              },
+            connect: t.Array(
+              t.Object(
+                {
+                  id: t.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
               { additionalProperties: false },
             ),
-            disconnect: t.Boolean(),
+            disconnect: t.Array(
+              t.Object(
+                {
+                  id: t.String({ additionalProperties: false }),
+                },
+                { additionalProperties: false },
+              ),
+              { additionalProperties: false },
+            ),
           },
           { additionalProperties: false },
         ),
@@ -197,7 +212,7 @@ export const UserRelationsInputUpdate = t.Partial(
             connect: t.Array(
               t.Object(
                 {
-                  id: t.Integer({ additionalProperties: false }),
+                  id: t.String({ additionalProperties: false }),
                 },
                 { additionalProperties: false },
               ),
@@ -206,7 +221,7 @@ export const UserRelationsInputUpdate = t.Partial(
             disconnect: t.Array(
               t.Object(
                 {
-                  id: t.Integer({ additionalProperties: false }),
+                  id: t.String({ additionalProperties: false }),
                 },
                 { additionalProperties: false },
               ),
@@ -229,7 +244,7 @@ export const UserWhere = t.Partial(
           AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
           NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
           OR: t.Array(Self, { additionalProperties: false }),
-          id: t.Integer(),
+          id: t.String(),
           email: t.String(),
           username: t.String(),
           name: t.String(),
@@ -251,13 +266,13 @@ export const UserWhereUnique = t.Recursive(
       [
         t.Partial(
           t.Object(
-            { id: t.Integer(), email: t.String() },
+            { id: t.String(), email: t.String() },
             { additionalProperties: false },
           ),
           { additionalProperties: false },
         ),
         t.Union(
-          [t.Object({ id: t.Integer() }), t.Object({ email: t.String() })],
+          [t.Object({ id: t.String() }), t.Object({ email: t.String() })],
           { additionalProperties: false },
         ),
         t.Partial(
@@ -277,7 +292,7 @@ export const UserWhereUnique = t.Recursive(
         t.Partial(
           t.Object(
             {
-              id: t.Integer(),
+              id: t.String(),
               email: t.String(),
               username: t.String(),
               name: t.String(),
@@ -308,7 +323,7 @@ export const UserSelect = t.Partial(
       displayUsername: t.Boolean(),
       createdAt: t.Boolean(),
       updatedAt: t.Boolean(),
-      account: t.Boolean(),
+      accounts: t.Boolean(),
       sessions: t.Boolean(),
       threads: t.Boolean(),
       _count: t.Boolean(),
@@ -320,7 +335,7 @@ export const UserSelect = t.Partial(
 export const UserInclude = t.Partial(
   t.Object(
     {
-      account: t.Boolean(),
+      accounts: t.Boolean(),
       sessions: t.Boolean(),
       threads: t.Boolean(),
       _count: t.Boolean(),

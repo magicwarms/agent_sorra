@@ -21,7 +21,7 @@ enum Role {
 }
 
 model User {
-    id              Int       @id @default(autoincrement())
+    id              String    @id
     email           String    @unique
     username        String?
     name            String?
@@ -30,7 +30,7 @@ model User {
     displayUsername String?
     createdAt       DateTime  @default(now())
     updatedAt       DateTime  @updatedAt
-    account         Account?
+    accounts        Account[]
     sessions        Session[]
     threads         Thread[]
 
@@ -39,9 +39,9 @@ model User {
 }
 
 model Thread {
-    id        Int       @id @default(autoincrement())
+    id        String    @id @default(uuid(7))
     title     String    @unique
-    userId    Int
+    userId    String
     createdAt DateTime  @default(now())
     user      User      @relation(fields: [userId], references: [id])
     messages  Message[]
@@ -52,7 +52,7 @@ model Thread {
 
 model Message {
     id        String   @id @default(uuid(7))
-    threadId  Int
+    threadId  String
     content   String
     role      Role
     createdAt DateTime @default(now())
@@ -70,7 +70,7 @@ model Session {
     updatedAt DateTime @updatedAt
     ipAddress String?
     userAgent String?
-    userId    Int
+    userId    String
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([token])
@@ -80,10 +80,10 @@ model Session {
 
 model Account {
     id                    String    @id
-    issuer                String
+    issuer                String?
     accountId             String
     providerId            String
-    userId                Int
+    userId                String
     accessToken           String?
     refreshToken          String?
     idToken               String?
@@ -95,8 +95,7 @@ model Account {
     createdAt             DateTime  @default(now())
     updatedAt             DateTime  @updatedAt
 
-    @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
-    @@unique([userId])
+    @@unique([providerId, accountId])
     @@index([userId])
     @@map("account")
 }
@@ -111,4 +110,14 @@ model Verification {
 
     @@index([identifier])
     @@map("verification")
+}
+
+model RateLimit {
+    id          String @id
+    key         String
+    count       Int
+    lastRequest BigInt
+
+    @@unique([key])
+    @@map("rateLimit")
 }

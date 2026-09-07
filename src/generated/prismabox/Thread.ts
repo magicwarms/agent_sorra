@@ -6,9 +6,9 @@ import { __nullable__ } from "./__nullable__";
 
 export const ThreadPlain = t.Object(
   {
-    id: t.Integer(),
+    id: t.String(),
     title: t.String(),
-    userId: t.Integer(),
+    userId: t.String(),
     createdAt: t.Date(),
   },
   { additionalProperties: false },
@@ -18,7 +18,7 @@ export const ThreadRelations = t.Object(
   {
     user: t.Object(
       {
-        id: t.Integer(),
+        id: t.String(),
         email: t.String(),
         username: __nullable__(t.String()),
         name: __nullable__(t.String()),
@@ -34,7 +34,7 @@ export const ThreadRelations = t.Object(
       t.Object(
         {
           id: t.String(),
-          threadId: t.Integer(),
+          threadId: t.String(),
           content: t.String(),
           role: t.Union([t.Literal("USER"), t.Literal("ASSISTANT")], {
             additionalProperties: false,
@@ -65,7 +65,7 @@ export const ThreadRelationsInputCreate = t.Object(
       {
         connect: t.Object(
           {
-            id: t.Integer({ additionalProperties: false }),
+            id: t.String({ additionalProperties: false }),
           },
           { additionalProperties: false },
         ),
@@ -99,7 +99,7 @@ export const ThreadRelationsInputUpdate = t.Partial(
         {
           connect: t.Object(
             {
-              id: t.Integer({ additionalProperties: false }),
+              id: t.String({ additionalProperties: false }),
             },
             { additionalProperties: false },
           ),
@@ -144,9 +144,9 @@ export const ThreadWhere = t.Partial(
           AND: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
           NOT: t.Union([Self, t.Array(Self, { additionalProperties: false })]),
           OR: t.Array(Self, { additionalProperties: false }),
-          id: t.Integer(),
+          id: t.String(),
           title: t.String(),
-          userId: t.Integer(),
+          userId: t.String(),
           createdAt: t.Date(),
         },
         { additionalProperties: false },
@@ -161,13 +161,13 @@ export const ThreadWhereUnique = t.Recursive(
       [
         t.Partial(
           t.Object(
-            { id: t.Integer(), title: t.String() },
+            { id: t.String(), title: t.String() },
             { additionalProperties: false },
           ),
           { additionalProperties: false },
         ),
         t.Union(
-          [t.Object({ id: t.Integer() }), t.Object({ title: t.String() })],
+          [t.Object({ id: t.String() }), t.Object({ title: t.String() })],
           { additionalProperties: false },
         ),
         t.Partial(
@@ -187,9 +187,9 @@ export const ThreadWhereUnique = t.Recursive(
         t.Partial(
           t.Object(
             {
-              id: t.Integer(),
+              id: t.String(),
               title: t.String(),
-              userId: t.Integer(),
+              userId: t.String(),
               createdAt: t.Date(),
             },
             { additionalProperties: false },
