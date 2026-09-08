@@ -1,26 +1,17 @@
-import Elysia, { t } from "elysia";
+import Elysia, { StatusMap, t } from "elysia";
 import { CreateUserDTO, LoginUserDTO } from "./user.dto";
 import { loginUser, storeUser } from "./user.service";
 import { standardResponse } from "../utils/utils";
-import { ElysiaError } from "../utils/error-handling";
+import { ElysiaError, formatError } from "../utils/error-handling";
+import { authGuard, jwtConfig } from "../auth/guard.service";
 
 export const userController = new Elysia({
   prefix: "/users",
   detail: { tags: ["User"] },
-});
-
-userController
+})
+  .use(jwtConfig)
   .error({ ElysiaError })
-  .onError(({ code, error }) => {
-    const message =
-      error instanceof Error
-        ? error.message
-        : typeof error === "object" && error !== null && "message" in error
-          ? String(error.message)
-          : String(error);
-
-    return new ElysiaError(message, code);
-  })
+  .onError(({ code, error }) => new ElysiaError(formatError(error), code))
   .post(
     "/",
     async ({ body, headers }) => {
@@ -44,26 +35,13 @@ userController
       response: standardResponse.response,
       detail: {
         summary: "Register user",
+        tags: ["User"],
       },
     },
   )
-  .error({ ElysiaError });
-
-userController
-  .error({ ElysiaError })
-  .onError(({ code, error }) => {
-    const message =
-      error instanceof Error
-        ? error.message
-        : typeof error === "object" && error !== null && "message" in error
-          ? String(error.message)
-          : String(error);
-
-    return new ElysiaError(message, code);
-  })
   .post(
     "/login",
-    async ({ body, headers }) => {
+    async ({ jwt, body, headers }) => {
       const login = await loginUser(
         {
           email: body.email,
@@ -75,7 +53,13 @@ userController
       return {
         success: true,
         message: "Login user successfull",
-        data: login,
+        data: {
+          ...login,
+          token: await jwt.sign({
+            userId: login.user.id,
+            email: login.user.email,
+          }),
+        },
       };
     },
     {
@@ -83,6 +67,54 @@ userController
       response: standardResponse.response,
       detail: {
         summary: "Login user",
+        tags: ["User"],
       },
     },
   );
+
+userController.guard(
+  {
+    detail: {
+      description: "Require user to be logged in",
+      tags: ["User"],
+    },
+  },
+  (app) =>
+    app
+      .resolve(async ({ jwt, headers, status }) => {
+        const payload = await authGuard({ jwt, headers });
+        if (!payload.status) {
+          return status(401, {
+            success: false,
+            message: {
+              message: "Unauthorized",
+              code: StatusMap.Unauthorized,
+            },
+            data: null,
+          });
+        }
+
+        return {
+          user: payload.data,
+        };
+      })
+      .get(
+        "/profile",
+        ({ user }) => {
+          return {
+            success: true,
+            data: {
+              userId: user.userId,
+              email: user.email,
+            },
+            message: "User profile",
+          };
+        },
+        {
+          response: standardResponse.response,
+          detail: {
+            summary: "Get user profile",
+          },
+        },
+      ),
+);

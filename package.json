@@ -10,6 +10,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@elysia/jwt": "^1.4.2",
     "@elysia/openapi": "^1.4.15",
     "@langchain/core": "^1.2.9",
     "@langchain/langgraph": "^1.4.13",
