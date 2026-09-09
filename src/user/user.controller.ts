@@ -20,6 +20,7 @@ export const userController = new Elysia({
           name: body.name,
           email: body.email,
           password: body.password,
+          username: body.username,
         },
         headers,
       );

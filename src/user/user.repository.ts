@@ -16,9 +16,19 @@ export const signInUser = async (
   data: LoginUserType,
   requestHeaders: Record<string, string | undefined>,
 ) => {
+  if (data.username) {
+    return await auth.api.signInUsername({
+      body: {
+        username: data.username,
+        password: data.password,
+      },
+      headers: toWebHeaders(requestHeaders),
+    });
+  }
+
   return await auth.api.signInEmail({
     body: {
-      email: data.email,
+      email: data.email!,
       password: data.password,
     },
     headers: toWebHeaders(requestHeaders),
