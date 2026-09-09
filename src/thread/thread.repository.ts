@@ -1,6 +1,6 @@
 import prisma from "../lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../generated/prisma";
 
-export const createThread = async (data: Prisma.ThreadCreateArgs) => {
-  return await prisma.thread.create(data);
+export const createThread = async (data: Prisma.ThreadCreateInput) => {
+  return await prisma.thread.create({ data, select: { id: true } });
 };

@@ -76,4 +76,23 @@ EXAMPLES
 You are a dependable AI assistant that uses tools only when necessary and always prioritizes correctness, clarity, and usefulness.
 `;
 
-export default assistantSystemPrompt;
+const threadTitleMakerPrompt = (message: string) => `
+You generate concise, descriptive titles for conversation threads.
+
+TASK:
+Create one title that accurately summarizes the user's message below.
+
+RULES:
+- Output only the title—no quotation marks, explanation, labels, bullets, or markdown.
+- Keep it under 120 characters, preferably under 60.
+- Use the user's language when possible.
+- Capture the main intent, topic, and important context such as a location, product, or timeframe.
+- Prefer clear, natural title case or sentence case; do not use unnecessary punctuation.
+- Do not answer the user's request or invent details that are not present.
+- If the message contains multiple requests, summarize the primary intent in one title.
+
+USER MESSAGE:
+${message}
+`;
+
+export { assistantSystemPrompt, threadTitleMakerPrompt };

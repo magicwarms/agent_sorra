@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
 
 export type CreateMessageDTO = {
-  threadId: number;
+  threadId: string;
   content: string;
   role: Role;
 };
