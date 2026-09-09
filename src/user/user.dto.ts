@@ -10,7 +10,7 @@ export const CreateUserDTO = {
     pattern: "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$",
     error: "Password harus 8+ karakter, ada huruf besar, kecil, dan angka",
   }),
-  username: t.String(),
+  username: t.Optional(t.String()),
 };
 
 export type CreateUserType = {
@@ -21,11 +21,7 @@ export type CreateUserType = {
 };
 
 export const LoginUserDTO = {
-  email: t.Optional(
-    t.String({
-      format: "email",
-    }),
-  ),
+  email: t.Optional(t.String()),
   username: t.Optional(t.String()),
   password: t.String({
     minLength: 8,

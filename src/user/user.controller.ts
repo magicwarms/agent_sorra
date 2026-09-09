@@ -20,7 +20,7 @@ export const userController = new Elysia({
           name: body.name,
           email: body.email,
           password: body.password,
-          username: body.username,
+          username: body.username || "",
         },
         headers,
       );
@@ -47,6 +47,7 @@ export const userController = new Elysia({
         {
           email: body.email,
           password: body.password,
+          username: body.username,
         },
         headers,
       );
@@ -59,6 +60,7 @@ export const userController = new Elysia({
           token: await jwt.sign({
             userId: login.user.id,
             email: login.user.email,
+            username: login.user.username,
           }),
         },
       };
