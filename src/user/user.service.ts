@@ -1,4 +1,3 @@
-import { ElysiaError } from "../utils/error-handling";
 import { CreateUserType, LoginUserType } from "./user.dto";
 import { createUser, signInUser } from "./user.repository";
 

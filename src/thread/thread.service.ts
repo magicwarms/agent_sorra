@@ -1,6 +1,10 @@
 import { Prisma } from "../generated/prisma";
-import { CreateThreadDTO } from "./thread.dto";
-import { createThread } from "./thread.repository";
+import { CreateThreadDTO, FindAllThreadDTO } from "./thread.dto";
+import {
+  countAllThread,
+  createThread,
+  findAllThreads,
+} from "./thread.repository";
 
 export const storeThread = async (data: CreateThreadDTO) => {
   const storeData: Prisma.ThreadCreateInput = {
@@ -10,4 +14,24 @@ export const storeThread = async (data: CreateThreadDTO) => {
     title: data.title,
   };
   return await createThread(storeData);
+};
+
+export const getAllThreads = async (payload: FindAllThreadDTO) => {
+  const { pageNumber, perPage } = payload;
+  const [threads, totalThread] = await Promise.all([
+    findAllThreads(payload),
+    countAllThread(payload.userId),
+  ]);
+
+  const totalPages = Math.ceil(totalThread / perPage);
+
+  return {
+    threads,
+    meta: {
+      total: totalThread,
+      totalPages,
+      hasNextPage: pageNumber < totalPages,
+      hasPreviousPage: pageNumber > 1,
+    },
+  };
 };

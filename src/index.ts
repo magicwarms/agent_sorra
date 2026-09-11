@@ -6,6 +6,7 @@ import { healthController } from "./health/health.controller";
 import { checkDatabaseConnection } from "./health/health.service";
 import { userController } from "./user/user.controller";
 import { gatewayController } from "./gateway/gateway.controller";
+import { threadController } from "./thread/thread.controller";
 
 const app = new Elysia({
   prefix: "/v1",
@@ -72,6 +73,7 @@ app.use(
 app.use(healthController);
 app.use(userController);
 app.use(gatewayController);
+app.use(threadController);
 
 checkDatabaseConnection();
 
