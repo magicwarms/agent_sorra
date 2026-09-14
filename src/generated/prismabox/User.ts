@@ -65,6 +65,7 @@ export const UserRelations = t.Object(
           id: t.String(),
           title: t.String(),
           userId: t.String(),
+          totalToken: t.Integer(),
           createdAt: t.Date(),
         },
         { additionalProperties: false },

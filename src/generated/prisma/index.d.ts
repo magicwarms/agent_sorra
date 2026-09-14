@@ -2725,14 +2725,25 @@ export namespace Prisma {
 
   export type AggregateThread = {
     _count: ThreadCountAggregateOutputType | null
+    _avg: ThreadAvgAggregateOutputType | null
+    _sum: ThreadSumAggregateOutputType | null
     _min: ThreadMinAggregateOutputType | null
     _max: ThreadMaxAggregateOutputType | null
+  }
+
+  export type ThreadAvgAggregateOutputType = {
+    totalToken: number | null
+  }
+
+  export type ThreadSumAggregateOutputType = {
+    totalToken: number | null
   }
 
   export type ThreadMinAggregateOutputType = {
     id: string | null
     title: string | null
     userId: string | null
+    totalToken: number | null
     createdAt: Date | null
   }
 
@@ -2740,6 +2751,7 @@ export namespace Prisma {
     id: string | null
     title: string | null
     userId: string | null
+    totalToken: number | null
     createdAt: Date | null
   }
 
@@ -2747,15 +2759,25 @@ export namespace Prisma {
     id: number
     title: number
     userId: number
+    totalToken: number
     createdAt: number
     _all: number
   }
 
 
+  export type ThreadAvgAggregateInputType = {
+    totalToken?: true
+  }
+
+  export type ThreadSumAggregateInputType = {
+    totalToken?: true
+  }
+
   export type ThreadMinAggregateInputType = {
     id?: true
     title?: true
     userId?: true
+    totalToken?: true
     createdAt?: true
   }
 
@@ -2763,6 +2785,7 @@ export namespace Prisma {
     id?: true
     title?: true
     userId?: true
+    totalToken?: true
     createdAt?: true
   }
 
@@ -2770,6 +2793,7 @@ export namespace Prisma {
     id?: true
     title?: true
     userId?: true
+    totalToken?: true
     createdAt?: true
     _all?: true
   }
@@ -2812,6 +2836,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ThreadAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ThreadSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ThreadMinAggregateInputType
@@ -2842,6 +2878,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ThreadCountAggregateInputType | true
+    _avg?: ThreadAvgAggregateInputType
+    _sum?: ThreadSumAggregateInputType
     _min?: ThreadMinAggregateInputType
     _max?: ThreadMaxAggregateInputType
   }
@@ -2850,8 +2888,11 @@ export namespace Prisma {
     id: string
     title: string
     userId: string
+    totalToken: number
     createdAt: Date
     _count: ThreadCountAggregateOutputType | null
+    _avg: ThreadAvgAggregateOutputType | null
+    _sum: ThreadSumAggregateOutputType | null
     _min: ThreadMinAggregateOutputType | null
     _max: ThreadMaxAggregateOutputType | null
   }
@@ -2874,6 +2915,7 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     userId?: boolean
+    totalToken?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     messages?: boolean | Thread$messagesArgs<ExtArgs>
@@ -2884,6 +2926,7 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     userId?: boolean
+    totalToken?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["thread"]>
@@ -2892,6 +2935,7 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     userId?: boolean
+    totalToken?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["thread"]>
@@ -2900,10 +2944,11 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     userId?: boolean
+    totalToken?: boolean
     createdAt?: boolean
   }
 
-  export type ThreadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "userId" | "createdAt", ExtArgs["result"]["thread"]>
+  export type ThreadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "userId" | "totalToken" | "createdAt", ExtArgs["result"]["thread"]>
   export type ThreadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     messages?: boolean | Thread$messagesArgs<ExtArgs>
@@ -2926,6 +2971,7 @@ export namespace Prisma {
       id: string
       title: string
       userId: string
+      totalToken: number
       createdAt: Date
     }, ExtArgs["result"]["thread"]>
     composites: {}
@@ -3355,6 +3401,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Thread", 'String'>
     readonly title: FieldRef<"Thread", 'String'>
     readonly userId: FieldRef<"Thread", 'String'>
+    readonly totalToken: FieldRef<"Thread", 'Int'>
     readonly createdAt: FieldRef<"Thread", 'DateTime'>
   }
     
@@ -9215,6 +9262,7 @@ export namespace Prisma {
     id: 'id',
     title: 'title',
     userId: 'userId',
+    totalToken: 'totalToken',
     createdAt: 'createdAt'
   };
 
@@ -9353,20 +9401,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Role'
-   */
-  export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
-    
-
-
-  /**
-   * Reference to a field of type 'Role[]'
-   */
-  export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -9377,6 +9411,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Role'
+   */
+  export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+  /**
+   * Reference to a field of type 'Role[]'
+   */
+  export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
     
 
 
@@ -9499,6 +9547,7 @@ export namespace Prisma {
     id?: StringFilter<"Thread"> | string
     title?: StringFilter<"Thread"> | string
     userId?: StringFilter<"Thread"> | string
+    totalToken?: IntFilter<"Thread"> | number
     createdAt?: DateTimeFilter<"Thread"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     messages?: MessageListRelationFilter
@@ -9508,6 +9557,7 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     userId?: SortOrder
+    totalToken?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     messages?: MessageOrderByRelationAggregateInput
@@ -9520,6 +9570,7 @@ export namespace Prisma {
     OR?: ThreadWhereInput[]
     NOT?: ThreadWhereInput | ThreadWhereInput[]
     userId?: StringFilter<"Thread"> | string
+    totalToken?: IntFilter<"Thread"> | number
     createdAt?: DateTimeFilter<"Thread"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     messages?: MessageListRelationFilter
@@ -9529,10 +9580,13 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     userId?: SortOrder
+    totalToken?: SortOrder
     createdAt?: SortOrder
     _count?: ThreadCountOrderByAggregateInput
+    _avg?: ThreadAvgOrderByAggregateInput
     _max?: ThreadMaxOrderByAggregateInput
     _min?: ThreadMinOrderByAggregateInput
+    _sum?: ThreadSumOrderByAggregateInput
   }
 
   export type ThreadScalarWhereWithAggregatesInput = {
@@ -9542,6 +9596,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Thread"> | string
     title?: StringWithAggregatesFilter<"Thread"> | string
     userId?: StringWithAggregatesFilter<"Thread"> | string
+    totalToken?: IntWithAggregatesFilter<"Thread"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Thread"> | Date | string
   }
 
@@ -9976,6 +10031,7 @@ export namespace Prisma {
   export type ThreadCreateInput = {
     id?: string
     title: string
+    totalToken?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutThreadsInput
     messages?: MessageCreateNestedManyWithoutThreadInput
@@ -9985,6 +10041,7 @@ export namespace Prisma {
     id?: string
     title: string
     userId: string
+    totalToken?: number
     createdAt?: Date | string
     messages?: MessageUncheckedCreateNestedManyWithoutThreadInput
   }
@@ -9992,6 +10049,7 @@ export namespace Prisma {
   export type ThreadUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutThreadsNestedInput
     messages?: MessageUpdateManyWithoutThreadNestedInput
@@ -10001,6 +10059,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUncheckedUpdateManyWithoutThreadNestedInput
   }
@@ -10009,12 +10068,14 @@ export namespace Prisma {
     id?: string
     title: string
     userId: string
+    totalToken?: number
     createdAt?: Date | string
   }
 
   export type ThreadUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10022,6 +10083,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10561,6 +10623,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -10580,13 +10653,19 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     userId?: SortOrder
+    totalToken?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type ThreadAvgOrderByAggregateInput = {
+    totalToken?: SortOrder
   }
 
   export type ThreadMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     userId?: SortOrder
+    totalToken?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10594,7 +10673,28 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     userId?: SortOrder
+    totalToken?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type ThreadSumOrderByAggregateInput = {
+    totalToken?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumRoleFilter<$PrismaModel = never> = {
@@ -10784,17 +10884,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -10835,22 +10924,6 @@ export namespace Prisma {
   export type RateLimitSumOrderByAggregateInput = {
     count?: SortOrder
     lastRequest?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -11031,6 +11104,14 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type UserUpdateOneRequiredWithoutThreadsNestedInput = {
     create?: XOR<UserCreateWithoutThreadsInput, UserUncheckedCreateWithoutThreadsInput>
     connectOrCreate?: UserCreateOrConnectWithoutThreadsInput
@@ -11115,14 +11196,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutAccountsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -11255,6 +11328,33 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedEnumRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[] | ListEnumRoleFieldRefInput<$PrismaModel>
@@ -11306,33 +11406,6 @@ export namespace Prisma {
     gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     not?: NestedBigIntFilter<$PrismaModel> | bigint | number
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -11426,6 +11499,7 @@ export namespace Prisma {
   export type ThreadCreateWithoutUserInput = {
     id?: string
     title: string
+    totalToken?: number
     createdAt?: Date | string
     messages?: MessageCreateNestedManyWithoutThreadInput
   }
@@ -11433,6 +11507,7 @@ export namespace Prisma {
   export type ThreadUncheckedCreateWithoutUserInput = {
     id?: string
     title: string
+    totalToken?: number
     createdAt?: Date | string
     messages?: MessageUncheckedCreateNestedManyWithoutThreadInput
   }
@@ -11536,6 +11611,7 @@ export namespace Prisma {
     id?: StringFilter<"Thread"> | string
     title?: StringFilter<"Thread"> | string
     userId?: StringFilter<"Thread"> | string
+    totalToken?: IntFilter<"Thread"> | number
     createdAt?: DateTimeFilter<"Thread"> | Date | string
   }
 
@@ -11665,6 +11741,7 @@ export namespace Prisma {
   export type ThreadCreateWithoutMessagesInput = {
     id?: string
     title: string
+    totalToken?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutThreadsInput
   }
@@ -11673,6 +11750,7 @@ export namespace Prisma {
     id?: string
     title: string
     userId: string
+    totalToken?: number
     createdAt?: Date | string
   }
 
@@ -11695,6 +11773,7 @@ export namespace Prisma {
   export type ThreadUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutThreadsNestedInput
   }
@@ -11703,6 +11782,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11879,6 +11959,7 @@ export namespace Prisma {
   export type ThreadCreateManyUserInput = {
     id?: string
     title: string
+    totalToken?: number
     createdAt?: Date | string
   }
 
@@ -11963,6 +12044,7 @@ export namespace Prisma {
   export type ThreadUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUpdateManyWithoutThreadNestedInput
   }
@@ -11970,6 +12052,7 @@ export namespace Prisma {
   export type ThreadUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUncheckedUpdateManyWithoutThreadNestedInput
   }
@@ -11977,6 +12060,7 @@ export namespace Prisma {
   export type ThreadUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    totalToken?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

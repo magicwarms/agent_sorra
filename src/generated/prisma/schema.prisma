@@ -39,12 +39,13 @@ model User {
 }
 
 model Thread {
-  id        String    @id @default(uuid(7))
-  title     String    @unique
-  userId    String
-  createdAt DateTime  @default(now())
-  user      User      @relation(fields: [userId], references: [id])
-  messages  Message[]
+  id         String    @id @default(uuid(7))
+  title      String    @unique
+  userId     String
+  totalToken Int       @default(0)
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id])
+  messages   Message[]
 
   @@index([userId])
   @@map("threads")

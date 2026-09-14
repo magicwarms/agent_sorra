@@ -136,6 +136,7 @@ exports.Prisma.ThreadScalarFieldEnum = {
   id: 'id',
   title: 'title',
   userId: 'userId',
+  totalToken: 'totalToken',
   createdAt: 'createdAt'
 };
 

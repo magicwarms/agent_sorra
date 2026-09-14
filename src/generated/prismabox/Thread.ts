@@ -9,6 +9,7 @@ export const ThreadPlain = t.Object(
     id: t.String(),
     title: t.String(),
     userId: t.String(),
+    totalToken: t.Integer(),
     createdAt: t.Date(),
   },
   { additionalProperties: false },
@@ -50,12 +51,12 @@ export const ThreadRelations = t.Object(
 );
 
 export const ThreadPlainInputCreate = t.Object(
-  { title: t.String() },
+  { title: t.String(), totalToken: t.Optional(t.Integer()) },
   { additionalProperties: false },
 );
 
 export const ThreadPlainInputUpdate = t.Object(
-  { title: t.Optional(t.String()) },
+  { title: t.Optional(t.String()), totalToken: t.Optional(t.Integer()) },
   { additionalProperties: false },
 );
 
@@ -147,6 +148,7 @@ export const ThreadWhere = t.Partial(
           id: t.String(),
           title: t.String(),
           userId: t.String(),
+          totalToken: t.Integer(),
           createdAt: t.Date(),
         },
         { additionalProperties: false },
@@ -190,6 +192,7 @@ export const ThreadWhereUnique = t.Recursive(
               id: t.String(),
               title: t.String(),
               userId: t.String(),
+              totalToken: t.Integer(),
               createdAt: t.Date(),
             },
             { additionalProperties: false },
@@ -207,6 +210,7 @@ export const ThreadSelect = t.Partial(
       id: t.Boolean(),
       title: t.Boolean(),
       userId: t.Boolean(),
+      totalToken: t.Boolean(),
       createdAt: t.Boolean(),
       user: t.Boolean(),
       messages: t.Boolean(),
@@ -233,6 +237,9 @@ export const ThreadOrderBy = t.Partial(
         additionalProperties: false,
       }),
       userId: t.Union([t.Literal("asc"), t.Literal("desc")], {
+        additionalProperties: false,
+      }),
+      totalToken: t.Union([t.Literal("asc"), t.Literal("desc")], {
         additionalProperties: false,
       }),
       createdAt: t.Union([t.Literal("asc"), t.Literal("desc")], {

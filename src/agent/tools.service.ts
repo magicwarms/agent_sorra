@@ -195,57 +195,6 @@ export const getWeather = tool(
   },
 );
 
-export const webSearch = tool(
-  async (input: { query: string }) => {
-    const searchUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(input.query)}&format=json&no_html=1&skip_disambig=1`;
-    const data = await fetchJson<{
-      AbstractText?: string;
-      AbstractSource?: string;
-      AbstractURL?: string;
-      Heading?: string;
-      RelatedTopics?: Array<
-        { Name?: string; Text?: string; FirstURL?: string } | string
-      >;
-    }>(searchUrl);
-
-    const relatedTopics = (data.RelatedTopics ?? [])
-      .filter(
-        (topic): topic is { Name?: string; Text?: string; FirstURL?: string } =>
-          typeof topic === "object" && topic !== null,
-      )
-      .slice(0, 5)
-      .map((topic) => ({
-        title: topic.Name ?? "Related result",
-        text: topic.Text ?? "",
-        url: topic.FirstURL ?? null,
-      }));
-
-    return normalizeToolResult(
-      {
-        query: input.query,
-        answer:
-          data.AbstractText ||
-          data.Heading ||
-          "No direct summary was returned.",
-        source: data.AbstractSource || null,
-        url: data.AbstractURL || relatedTopics[0]?.url || null,
-        relatedTopics,
-      },
-      `The web search for "${input.query}" did not return usable results. Try a more specific or shorter search query.`,
-    );
-  },
-  {
-    name: "web_search",
-    description:
-      "Search the web for recent or factual information, then summarize the most relevant results.",
-    schema: z.object({
-      query: z
-        .string()
-        .describe("The search query to investigate on the internet"),
-    }),
-  },
-);
-
 export const getCommonInfo = tool(
   async (input: { query: string }) => {
     const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(input.query)}&format=json&utf8=1&origin=*`;
