@@ -3,6 +3,7 @@ import { standardResponse } from "../utils/utils";
 import { ElysiaError, formatError } from "../utils/error-handling";
 import { authGuard, jwtConfig } from "../auth/guard.service";
 import { getAllThreads } from "../thread/thread.service";
+import { splitterText } from "../embedding/embedding.service";
 
 export const threadController = new Elysia({
   prefix: "/threads",
@@ -48,7 +49,7 @@ export const threadController = new Elysia({
               perPage: limit,
               userId: user.userId,
             });
-
+            await splitterText("./docs/nodejs-docs.pdf");
             return {
               success: true,
               data: threads,

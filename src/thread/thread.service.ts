@@ -4,6 +4,7 @@ import {
   countAllThread,
   createThread,
   findAllThreads,
+  updateTotalTokenUsageByThreadId,
 } from "./thread.repository";
 
 export const storeThread = async (data: CreateThreadDTO) => {
@@ -34,4 +35,11 @@ export const getAllThreads = async (payload: FindAllThreadDTO) => {
       hasPreviousPage: pageNumber > 1,
     },
   };
+};
+
+export const updateThreadToken = async (
+  threadId: string,
+  totalToken: number,
+) => {
+  return await updateTotalTokenUsageByThreadId(threadId, totalToken);
 };

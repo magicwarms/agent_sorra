@@ -4,6 +4,7 @@ import { ElysiaError, formatError } from "../utils/error-handling";
 import { authGuard, jwtConfig } from "../auth/guard.service";
 import { GatewayDTO } from "./gateway.dto";
 import { chatWithAgent } from "../agent/agent.service";
+import { updateThreadToken } from "../thread/thread.service";
 
 export const gatewayController = new Elysia({
   prefix: "/gateway",
@@ -12,6 +13,18 @@ export const gatewayController = new Elysia({
   .use(jwtConfig)
   .error({ ElysiaError })
   .onError(({ code, error }) => new ElysiaError(formatError(error), code))
+  .onAfterResponse(({ responseValue }) => {
+    const {
+      data: { threadId, usage },
+    } = responseValue as {
+      data: { threadId: string; usage: { totalTokens: number } };
+    };
+    updateThreadToken(threadId, usage.totalTokens).then((data) =>
+      data
+        ? console.log("update token success")
+        : console.log("update token failed"),
+    );
+  })
   .guard(
     {
       detail: {
