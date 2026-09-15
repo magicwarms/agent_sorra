@@ -3,7 +3,8 @@ import { standardResponse } from "../utils/utils";
 import { ElysiaError, formatError } from "../utils/error-handling";
 import { authGuard, jwtConfig } from "../auth/guard.service";
 import { getAllThreads } from "../thread/thread.service";
-import { splitterText } from "../embedding/embedding.service";
+import { findKnowledge } from "../embedding/embedding.service";
+import { COLLECTION_NAME } from "../utils/enum";
 
 export const threadController = new Elysia({
   prefix: "/threads",
@@ -49,10 +50,22 @@ export const threadController = new Elysia({
               perPage: limit,
               userId: user.userId,
             });
-            await splitterText("./docs/nodejs-docs.pdf");
+            // addKnowledge(
+            //   "./docs/interview-docs.pdf",
+            //   COLLECTION_NAME.INTERVIEW_GUIDE_DOCS,
+            // );
+            const results2 = await findKnowledge(
+              "What should I prepare before interview?",
+              COLLECTION_NAME.INTERVIEW_GUIDE_DOCS,
+            );
+            console.log({ results2: JSON.stringify(results2[0]) });
+
             return {
               success: true,
-              data: threads,
+              data: {
+                threads,
+                vector: results2,
+              },
               message: "success",
             };
           },
