@@ -56,8 +56,10 @@ export const gatewayController = new Elysia({
           async ({ user, body }) => {
             const conversation = await chatWithAgent({
               userId: user.userId,
+              email: user.email.trim(),
               message: body.message,
               threadId: body.threadId,
+              name: user.name.trim(),
             });
 
             return {

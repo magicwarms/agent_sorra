@@ -303,3 +303,56 @@ export const getInterviewKnowledge = tool(
     }),
   },
 );
+
+export const getNodejsKnowledge = tool(
+  async (input: { query: string }) => {
+    console.log("NODEJS TOOL INVOKED WITH QUERY:", input.query);
+    const searchQuery = input.query.trim();
+
+    if (!searchQuery) {
+      return normalizeToolResult(
+        {
+          query: input.query,
+          message: "No Node.js question was provided.",
+        },
+        "No Node.js knowledge was found because the query was empty. Please provide a topic or question about Node.js.",
+      );
+    }
+
+    const result = await findKnowledge(
+      searchQuery,
+      COLLECTION_NAME.NODEJS_GUIDE_DOCS,
+    );
+
+    if (!result || !result.length) {
+      return normalizeToolResult(
+        {
+          query: searchQuery,
+          message: `No Node.js knowledge found for "${searchQuery}".`,
+        },
+        `No Node.js knowledge was found for "${searchQuery}". Try a different query or a broader topic related to Node.js.`,
+      );
+    }
+
+    return normalizeToolResult(
+      {
+        query: searchQuery,
+        result: result[0],
+      },
+      `Node.js knowledge for "${searchQuery}" could not be loaded. Please try another search query.`,
+    );
+  },
+  {
+    name: "get_nodejs_knowledge",
+    description:
+      "Search the Node.js knowledge base for the user's question or topic about Node.js fundamentals, asynchronous programming, event loop, streams, APIs, Express, performance, debugging, security, or interview-style concepts.",
+    schema: z.object({
+      query: z
+        .string()
+        .min(1)
+        .describe(
+          "A Node.js-related question, concept, or topic to search for, such as the event loop, async/await, streams, Express, performance, debugging, security, or common interview scenarios.",
+        ),
+    }),
+  },
+);

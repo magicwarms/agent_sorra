@@ -58,6 +58,7 @@ export const userController = new Elysia({
         data: {
           ...login,
           token: await jwt.sign({
+            name: login.user.name,
             userId: login.user.id,
             email: login.user.email,
             username: login.user.username,

@@ -3,6 +3,8 @@ import {
   createMiddleware,
   HumanMessage,
   modelRetryMiddleware,
+  piiMiddleware,
+  piiRedactionMiddleware,
   summarizationMiddleware,
   toolRetryMiddleware,
 } from "langchain";
@@ -12,6 +14,7 @@ import * as z from "zod";
 import {
   getCommonInfo,
   getInterviewKnowledge,
+  getNodejsKnowledge,
   getRecipe,
   getWeather,
 } from "./tools.service";
@@ -39,33 +42,37 @@ const handleToolErrors = createMiddleware({
   },
 });
 
-const mainAgent = createAgent({
-  model: new ChatOpenAI({
-    model: process.env.OPENAI_MODEL as string,
-  }),
-  tools: [
-    tools.webSearch({
-      userLocation: { country: "ID", type: "approximate" },
-    }),
-    getRecipe,
-    getWeather,
-    getCommonInfo,
-    getInterviewKnowledge,
-  ],
-  systemPrompt: assistantSystemPrompt,
-  checkpointer,
-  name: "main_agent_sorra",
-  middleware: [
-    modelRetryMiddleware({ maxRetries: 3 }),
-    toolRetryMiddleware({ maxRetries: 2 }),
-    handleToolErrors,
-    summarizationMiddleware({
+const createMainAgent = (name: string, email: string) =>
+  createAgent({
+    model: new ChatOpenAI({
       model: process.env.OPENAI_MODEL as string,
-      trigger: { tokens: 4000, messages: 10 },
-      keep: { messages: 20 },
     }),
-  ],
-});
+    tools: [
+      tools.webSearch({
+        userLocation: { country: "ID", type: "approximate" },
+      }),
+      getRecipe,
+      getWeather,
+      getCommonInfo,
+      getInterviewKnowledge,
+      getNodejsKnowledge,
+    ],
+    systemPrompt: assistantSystemPrompt(name, email),
+    checkpointer,
+    name: "main_agent_sorra",
+    middleware: [
+      modelRetryMiddleware({ maxRetries: 3 }),
+      toolRetryMiddleware({ maxRetries: 2 }),
+      handleToolErrors,
+      summarizationMiddleware({
+        model: process.env.OPENAI_MODEL as string,
+        trigger: { tokens: 4000, messages: 10 },
+        keep: { messages: 20 },
+      }),
+      piiMiddleware("email", { strategy: "mask", applyToInput: true }),
+      piiMiddleware("credit_card", { strategy: "mask", applyToInput: true }),
+    ],
+  });
 
 const generateThreadTitleAgent = (message: string) =>
   createAgent({
@@ -96,9 +103,12 @@ const createOrReturnThreadId = async (data: AgentDTO) => {
 
 export const chatWithAgent = async (data: AgentDTO) => {
   const threadId = await createOrReturnThreadId(data);
-  const result = await mainAgent.invoke(
+  const result = await createMainAgent(data.name, data.email).invoke(
     { messages: [{ role: "user", content: data.message }] },
-    { configurable: { thread_id: threadId }, maxConcurrency: 5 },
+    {
+      configurable: { thread_id: threadId },
+      maxConcurrency: 5,
+    },
   );
 
   const finalResponse = result.messages[result.messages.length - 1];
