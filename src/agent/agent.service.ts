@@ -6,6 +6,7 @@ import {
   piiMiddleware,
   piiRedactionMiddleware,
   summarizationMiddleware,
+  todoListMiddleware,
   toolRetryMiddleware,
 } from "langchain";
 import { ChatOpenAI, tools } from "@langchain/openai";
@@ -69,6 +70,9 @@ const createMainAgent = (name: string, email: string) =>
         trigger: { tokens: 4000, messages: 10 },
         keep: { messages: 20 },
       }),
+      todoListMiddleware(),
+      // TODO:
+      // middleware ini belum jalan, cari tahu wak
       piiMiddleware("email", { strategy: "mask", applyToInput: true }),
       piiMiddleware("credit_card", { strategy: "mask", applyToInput: true }),
     ],
