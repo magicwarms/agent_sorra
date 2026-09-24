@@ -84,6 +84,8 @@ const storeDocument = async (
         splitDocument.slice(index, index + batchSize),
       );
     }
+
+    console.log("STORE DOCUMENT SUCCESS");
   } catch (err) {
     throw err instanceof Error ? err : new Error(String(err));
   }
@@ -94,7 +96,6 @@ export const addKnowledge = async (
   collectionName: COLLECTION_NAME,
 ) => {
   const splitDocument = await splitterText(filePath);
-  console.log({ splitDocument });
   await storeDocument(splitDocument, collectionName);
 };
 

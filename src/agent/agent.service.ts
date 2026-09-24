@@ -9,7 +9,12 @@ import {
 import { ChatOpenAI, tools } from "@langchain/openai";
 import { AIMessage, ToolMessage } from "@langchain/core/messages";
 import * as z from "zod";
-import { findRecipe, getCommonInfo, getWeather } from "./tools.service";
+import {
+  getCommonInfo,
+  getInterviewKnowledge,
+  getRecipe,
+  getWeather,
+} from "./tools.service";
 import { assistantSystemPrompt, threadTitleMakerPrompt } from "./system_prompt";
 import { PostgresSaver } from "@langchain/langgraph-checkpoint-postgres";
 import { AgentDTO } from "./agent.dto";
@@ -42,9 +47,10 @@ const mainAgent = createAgent({
     tools.webSearch({
       userLocation: { country: "ID", type: "approximate" },
     }),
-    findRecipe,
+    getRecipe,
     getWeather,
     getCommonInfo,
+    getInterviewKnowledge,
   ],
   systemPrompt: assistantSystemPrompt,
   checkpointer,

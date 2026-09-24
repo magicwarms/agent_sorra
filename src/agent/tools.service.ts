@@ -1,5 +1,7 @@
 import { tool } from "langchain";
 import * as z from "zod";
+import { findKnowledge } from "../embedding/embedding.service";
+import { COLLECTION_NAME } from "../utils/enum";
 
 const weatherCodeMap: Record<number, string> = {
   0: "Clear sky",
@@ -64,8 +66,9 @@ function normalizeToolResult<T extends Record<string, unknown>>(
   };
 }
 
-export const findRecipe = tool(
+export const getRecipe = tool(
   async (input: { recipeName: string }) => {
+    console.log("GETTING RECIPE INVOKED WITH NAME:", input.recipeName);
     const recipeRequest = await fetch(
       `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(input.recipeName)}`,
     );
@@ -124,6 +127,7 @@ export const findRecipe = tool(
 
 export const getWeather = tool(
   async (input: { location: string; unit?: "celsius" | "fahrenheit" }) => {
+    console.log("GETTING WEATHER INVOKED WITH LOCATION:", input.location);
     const unit = input.unit ?? "celsius";
     const geocodeData = await fetchJson<{
       results?: Array<{
@@ -197,6 +201,7 @@ export const getWeather = tool(
 
 export const getCommonInfo = tool(
   async (input: { query: string }) => {
+    console.log("GETTING COMMON INFO INVOKED WITH QUERY:", input.query);
     const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(input.query)}&format=json&utf8=1&origin=*`;
     const searchData = await fetchJson<{
       query?: {
@@ -242,6 +247,59 @@ export const getCommonInfo = tool(
       "Fetch stable general knowledge from a trusted source like Wikipedia for definitions, facts, and concise explanations.",
     schema: z.object({
       query: z.string().describe("The factual question or topic to look up"),
+    }),
+  },
+);
+
+export const getInterviewKnowledge = tool(
+  async (input: { query: string }) => {
+    console.log("INTERVIEW KNOWLEDGE TOOL INVOKED WITH QUERY:", input.query);
+    const searchQuery = input.query.trim();
+
+    if (!searchQuery) {
+      return normalizeToolResult(
+        {
+          query: input.query,
+          message: "No interview question was provided.",
+        },
+        "No interview knowledge was found because the query was empty. Please provide a topic or question about interview preparation.",
+      );
+    }
+
+    const result = await findKnowledge(
+      searchQuery,
+      COLLECTION_NAME.INTERVIEW_GUIDE_DOCS,
+    );
+
+    if (!result || !result.length) {
+      return normalizeToolResult(
+        {
+          query: searchQuery,
+          message: `No knowledge found for "${searchQuery}".`,
+        },
+        `No interview knowledge was found for "${searchQuery}". Try a different query or a broader topic about interview preparation.`,
+      );
+    }
+
+    return normalizeToolResult(
+      {
+        query: searchQuery,
+        result: result[0],
+      },
+      `Interview knowledge data could not be loaded for "${searchQuery}". Please try another search query.`,
+    );
+  },
+  {
+    name: "get_interview_knowledge",
+    description:
+      "Search the interview-preparation knowledge base for the user's actual question or topic, such as company research, behavioral interviews, technical interview prep, mock interview tips, salary discussion, or interview etiquette.",
+    schema: z.object({
+      query: z
+        .string()
+        .min(1)
+        .describe(
+          "The user's interview-related question or topic to search for, such as company research, behavioral questions, technical prep, mock interview tips, or interview follow-up guidance.",
+        ),
     }),
   },
 );

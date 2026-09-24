@@ -3,7 +3,7 @@ import { standardResponse } from "../utils/utils";
 import { ElysiaError, formatError } from "../utils/error-handling";
 import { authGuard, jwtConfig } from "../auth/guard.service";
 import { getAllThreads } from "../thread/thread.service";
-import { findKnowledge } from "../embedding/embedding.service";
+import { addKnowledge, findKnowledge } from "../embedding/embedding.service";
 import { COLLECTION_NAME } from "../utils/enum";
 
 export const threadController = new Elysia({
@@ -50,21 +50,25 @@ export const threadController = new Elysia({
               perPage: limit,
               userId: user.userId,
             });
+            // DONT DELETE THIS FOR TESTING PURPOSE
             // addKnowledge(
-            //   "./docs/interview-docs.pdf",
+            //   "./docs/nodejs-docs.pdf",
+            //   COLLECTION_NAME.NODEJS_GUIDE_DOCS,
+            // );
+            // const results2 = await findKnowledge(
+            //   "What should I prepare before interview?",
             //   COLLECTION_NAME.INTERVIEW_GUIDE_DOCS,
             // );
-            const results2 = await findKnowledge(
-              "What should I prepare before interview?",
-              COLLECTION_NAME.INTERVIEW_GUIDE_DOCS,
-            );
-            console.log({ results2: JSON.stringify(results2[0]) });
-
+            // console.log({ results2: JSON.stringify(results2[0]) });
+            // const results3 = await findKnowledge(
+            //   "what is nodejs?",
+            //   COLLECTION_NAME.NODEJS_GUIDE_DOCS,
+            // );
+            // console.log({ results2: JSON.stringify(results3[0]) });
             return {
               success: true,
               data: {
                 threads,
-                vector: results2,
               },
               message: "success",
             };
