@@ -116,6 +116,9 @@ export const chatWithAgent = async (data: AgentDTO) => {
   );
 
   const finalResponse = result.messages[result.messages.length - 1];
+  // TODO:
+  // cari tahu soal todo list ini wak gimana process nya
+  console.log({ result: JSON.stringify(result), finalResponse });
   const currentMessageIndex = result.messages.reduce(
     (lastIndex, message, index) =>
       HumanMessage.isInstance(message) && message.content === data.message
