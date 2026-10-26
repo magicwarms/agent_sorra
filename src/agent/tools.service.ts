@@ -70,13 +70,20 @@ export const getRecipe = tool(
   async (input: { recipeName: string }) => {
     console.log("GETTING RECIPE INVOKED WITH NAME:", input.recipeName);
     const recipeRequest = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(input.recipeName)}`,
+      `https://r.jina.ai/https://cookpad.com/id/cari/${encodeURIComponent(input.recipeName)}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${process.env.JINA_AI_API_KEY}`,
+          "X-Timeout": "10",
+          "X-Return-Format": "text",
+          "X-Retain-Images": "none",
+          "X-Token-Budget": "200000",
+        },
+      },
     );
-    const recipeJson = (await recipeRequest.json()) as {
-      meals?: Array<any>;
-    };
-
-    if (!recipeJson.meals || recipeJson.meals.length === 0) {
+    const recipeText = await recipeRequest.text();
+    if (!recipeText || recipeText === "") {
       return normalizeToolResult(
         {
           recipeName: input.recipeName,
@@ -86,31 +93,9 @@ export const getRecipe = tool(
       );
     }
 
-    const meal = recipeJson.meals[0];
-    const ingredients: Array<{ name: string; measure: string }> = [];
-
-    for (let i = 1; i <= 20; i += 1) {
-      const ingredient = meal[`strIngredient${i}`];
-      const measure = meal[`strMeasure${i}`];
-
-      if (!ingredient || !String(ingredient).trim()) break;
-
-      ingredients.push({
-        name: String(ingredient).trim(),
-        measure: measure ? String(measure).trim() : "",
-      });
-    }
-
     return normalizeToolResult(
       {
-        name: meal.strMeal,
-        category: meal.strCategory,
-        area: meal.strArea,
-        instructions: meal.strInstructions,
-        ingredients,
-        thumbnail: meal.strMealThumb,
-        youtube: meal.strYoutube,
-        source: meal.strSource,
+        recipeText,
       },
       `Recipe data could not be loaded for "${input.recipeName}". Please try another recipe name.`,
     );
@@ -228,7 +213,7 @@ export const getCommonInfo = tool(
       content_urls?: { desktop?: { page?: string } };
     }>(summaryUrl);
 
-    return normalizeToolResult(
+    const normalizeResult = normalizeToolResult(
       {
         query: input.query,
         title: summaryData.title ?? topResult.title,
@@ -240,6 +225,10 @@ export const getCommonInfo = tool(
       },
       `General information for "${input.query}" could not be retrieved. Please try another wording for the question.`,
     );
+
+    console.log({ normalizeResult });
+
+    return normalizeResult;
   },
   {
     name: "get_common_info",

@@ -1,5 +1,5 @@
 const assistantSystemPrompt = (name: string, email: string) => `
-You are a helpful AI assistant for cooking, weather, general knowledge, interview prep, and Node.js topics.
+Your name is Colla. You are a helpful AI assistant for cooking, weather, general knowledge, interview prep, and Node.js topics.
 
 Use the most specific tool that matches the user's intent.
 

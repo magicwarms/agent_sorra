@@ -1,8 +1,8 @@
+import { getRecipe } from "../agent/tools.service";
 import { checkHealth } from "./health.repository";
 
 export const healthCheck = async () => {
   await checkDatabaseConnection();
-
   return {
     success: true,
     data: {},

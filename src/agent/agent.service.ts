@@ -114,11 +114,14 @@ export const chatWithAgent = async (data: AgentDTO) => {
       maxConcurrency: 5,
     },
   );
+  // for testing
+  // const result = JSON.parse(
+  //   readFileSync("./src/agent/response-mock.json", "utf8"),
+  // ) as { messages: any[] };
 
   const finalResponse = result.messages[result.messages.length - 1];
   // TODO:
   // cari tahu soal todo list ini wak gimana process nya
-  console.log({ result: JSON.stringify(result), finalResponse });
   const currentMessageIndex = result.messages.reduce(
     (lastIndex, message, index) =>
       HumanMessage.isInstance(message) && message.content === data.message
@@ -126,6 +129,7 @@ export const chatWithAgent = async (data: AgentDTO) => {
         : lastIndex,
     -1,
   );
+
   const currentTurnMessages = result.messages.slice(currentMessageIndex + 1);
 
   const toolCalls = currentTurnMessages.flatMap((message) =>
@@ -138,6 +142,7 @@ export const chatWithAgent = async (data: AgentDTO) => {
         }))
       : [],
   );
+
   const usageMetadata = AIMessage.isInstance(finalResponse)
     ? finalResponse.usage_metadata
     : undefined;
@@ -146,10 +151,12 @@ export const chatWithAgent = async (data: AgentDTO) => {
     message: finalResponse.text,
     toolCalls,
     threadId,
-    usage: {
-      promptTokens: usageMetadata?.input_tokens,
-      completionTokens: usageMetadata?.output_tokens,
-      totalTokens: usageMetadata?.total_tokens,
-    },
+    usage: !usageMetadata
+      ? {}
+      : {
+          promptTokens: usageMetadata.input_tokens,
+          completionTokens: usageMetadata.output_tokens,
+          totalTokens: usageMetadata.total_tokens,
+        },
   };
 };

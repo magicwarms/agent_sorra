@@ -1,0 +1,443 @@
+{
+  "messages": [
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "HumanMessage"
+      ],
+      "kwargs": {
+        "content": "Hallo!",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "id": "148e6907-4eae-4dea-9dda-2566f5271158"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "AIMessage"
+      ],
+      "kwargs": {
+        "id": "resp_02e5a4c04f4f415e006ad82414f82087d09f13e8470ed772b5",
+        "content": [
+          {
+            "type": "text",
+            "text": "Halo, Aaron!  nnAku bisa bantu soal:n- masak & resep,n- info cuaca,n- pengetahuan umum,n- persiapan interview,n- atau hal teknis Node.js.nnMau mulai dari apa?",
+            "annotations": []
+          }
+        ],
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 8068,
+          "output_tokens": 56,
+          "total_tokens": 8124,
+          "input_token_details": {
+            "cache_read": 0,
+            "cache_creation": 0
+          },
+          "output_token_details": {
+            "reasoning": 0
+          }
+        },
+        "additional_kwargs": {},
+        "response_metadata": {
+          "id": "resp_02e5a4c04f4f415e006ad82414f82087d09f13e8470ed772b5",
+          "estimatedTokenUsage": {
+            "promptTokens": 8068,
+            "completionTokens": 56,
+            "totalTokens": 8124
+          },
+          "model_provider": "openai",
+          "model": "gpt-5.1-2025-11-13",
+          "created_at": 1792549909,
+          "incomplete_details": null,
+          "metadata": {},
+          "object": "response",
+          "output": [
+            {
+              "id": "msg_02e5a4c04f4f415e006ad824168c9887d090e01f995d08fc84",
+              "type": "message",
+              "status": "completed",
+              "content": [
+                {
+                  "type": "output_text",
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "Halo, Aaron!  nnAku bisa bantu soal:n- masak & resep,n- info cuaca,n- pengetahuan umum,n- persiapan interview,n- atau hal teknis Node.js.nnMau mulai dari apa?"
+                }
+              ],
+              "role": "assistant"
+            }
+          ],
+          "status": "completed",
+          "user": null,
+          "service_tier": "default",
+          "model_name": "gpt-5.1-2025-11-13"
+        },
+        "name": "main_agent_sorra"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "HumanMessage"
+      ],
+      "kwargs": {
+        "content": "nama kamu siapa?",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "id": "6b70b8af-4a5c-4730-b42d-570590568eb1"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "AIMessage"
+      ],
+      "kwargs": {
+        "id": "resp_02e5a4c04f4f415e006ad82475023087d0a3702dda35e7bf7c",
+        "content": [
+          {
+            "type": "text",
+            "text": "Aku asisten AI yang dibuat oleh OpenAI, kamu bisa panggil aku “Asisten” saja. �  nnKalau kamu mau,  kita juga bisa kasih aku nama panggilan lain yang kamu suka. Ada ide?",
+            "annotations": []
+          }
+        ],
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 8128,
+          "output_tokens": 88,
+          "total_tokens": 8216,
+          "input_token_details": {
+            "cache_read": 7936,
+            "cache_creation": 0
+          },
+          "output_token_details": {
+            "reasoning": 0
+          }
+        },
+        "additional_kwargs": {},
+        "response_metadata": {
+          "id": "resp_02e5a4c04f4f415e006ad82475023087d0a3702dda35e7bf7c",
+          "estimatedTokenUsage": {
+            "promptTokens": 8128,
+            "completionTokens": 88,
+            "totalTokens": 8216
+          },
+          "model_provider": "openai",
+          "model": "gpt-5.1-2025-11-13",
+          "created_at": 1792550005,
+          "incomplete_details": null,
+          "metadata": {},
+          "object": "response",
+          "output": [
+            {
+              "id": "msg_02e5a4c04f4f415e006ad824763f1887d0816bbdccbc784049",
+              "type": "message",
+              "status": "completed",
+              "content": [
+                {
+                  "type": "output_text",
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "Aku asisten AI yang dibuat oleh OpenAI, kamu bisa panggil aku “Asisten” saja. �  nnKalau kamu mau, kita juga bisa kasih aku nama panggilan lai n yang kamu suka. Ada ide?"
+                }
+              ],
+              "role": "assistant"
+            }
+          ],
+          "status": "completed",
+          "user": null,
+          "service_tier": "default",
+          "model_name": "gpt-5.1-2025-11-13"
+        },
+        "name": "main_agent_sorra"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "HumanMessage"
+      ],
+      "kwargs": {
+        "content": "Kamu siapa?",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "id": "50830e58-693c-412e-b3f5-c13bf668382b"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "AIMessage"
+      ],
+      "kwargs": {
+        "id": "resp_02e5a4c04f4f415e006ad825931d7087d08298dfca7d08b5ea",
+        "content": [
+          {
+            "type": "text",
+            "text": "Namaku Colla.  nAku asisten AI yang tugasnya bantu kamu dalam hal:nn- Masak & resep (ide masakan, cara masak, takaran, dll.)n- Cuaca (misalnya cuaca di kota tertentu hari ini)n- Pengetahuan umum (sejarah, sains dasar, definisi, penjelasan konsep)n- Persiapan interview kerja (strategi, contoh jawaban, dll.)n- Topik teknis Node.js (event loop, async/await, Express, dan lain-lain)nnKamu lagi penasaran soal apa sekarang?",
+            "annotations": []
+          }
+        ],
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 8193,
+          "output_tokens": 128,
+          "total_tokens": 8321,
+          "input_token_details": {
+            "cache_read": 7296,
+            "cache_creation": 0
+          },
+          "output_token_details": {
+            "reasoning": 0
+          }
+        },
+        "additional_kwargs": {},
+        "response_metadata": {
+          "id": "resp_02e5a4c04f4f415e006ad825931d7087d08298dfca7d08b5ea",
+          "estimatedTokenUsage": {
+            "promptTokens": 8193,
+            "completionTokens": 128,
+            "totalTokens": 8321
+          },
+          "model_provider": "openai",
+          "model": "gpt-5.1-2025-11-13",
+          "created_at": 1792550291,
+          "incomplete_details": null,
+          "metadata": {},
+          "object": "response",
+          "output": [
+            {
+              "id": "msg_02e5a4c04f4f415e006ad82594097c87d0b2efc89536750bf2",
+              "type": "message",
+              "status": "completed",
+              "content": [
+                {
+                  "type": "output_text",
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "Namaku Colla.  nAku asisten AI yang tugasnya bantu kamu dalam hal:nn- Masak & resep (ide masakan, cara masak, takaran, dll.)n- Cuaca (misalnya cuaca di kota tertentu hari ini)n- Pengetahuan umum (sejarah, sains dasar, definisi, penjelasan konsep)n- Persiapan interview kerja (strategi, contoh jawaban, dll.)n- Topik teknis Node.js (event loop, async/await, Express, dan lain-lain)nnKamu lagi penasaran soal apa sekarang?"
+                }
+              ],
+              "role": "assistant"
+            }
+          ],
+          "status": "completed",
+          "user": null,
+          "service_tier": "default",
+          "model_name": "gpt-5.1-2025-11-13"
+        },
+        "name": "main_agent_sorra"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "HumanMessage"
+      ],
+      "kwargs": {
+        "content": "Apa ibukota malaysia?",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "id": "c18f66ae-6104-4206-a5d4-e7b7612e3362"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "AIMessage"
+      ],
+      "kwargs": {
+        "id": "resp_02e5a4c04f4f415e006ad825b8be1087d0bfe3034b0a3b0877",
+        "content": [],
+        "tool_calls": [
+          {
+            "name": "get_common_info",
+            "args": {
+              "query": "capital city of Malaysia"
+            },
+            "type": "tool_call",
+            "id": "call_IoFgnglx12PslUzeC8SsiMNm"
+          }
+        ],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 8327,
+          "output_tokens": 28,
+          "total_tokens": 8355,
+          "input_token_details": {
+            "cache_read": 8064,
+            "cache_creation": 0
+          },
+          "output_token_details": {
+            "reasoning": 0
+          }
+        },
+        "additional_kwargs": {
+          "__openai_function_call_ids__": {
+            "call_IoFgnglx12PslUzeC8SsiMNm": "fc_02e5a4c04f4f415e006ad825b9770887d0a5409b78384eb42c"
+          }
+        },
+        "response_metadata": {
+          "id": "resp_02e5a4c04f4f415e006ad825b8be1087d0bfe3034b0a3b0877",
+          "estimatedTokenUsage": {
+            "promptTokens": 8327,
+            "completionTokens": 28,
+            "totalTokens": 8355
+          },
+          "model_provider": "openai",
+          "model": "gpt-5.1-2025-11-13",
+          "created_at": 1792550328,
+          "incomplete_details": null,
+          "metadata": {},
+          "object": "response",
+          "output": [
+            {
+              "id": "fc_02e5a4c04f4f415e006ad825b9770887d0a5409b78384eb42c",
+              "type": "function_call",
+              "status": "completed",
+              "arguments": {
+                "query": "capital city of Malaysia"
+              },
+              "call_id": "call_IoFgnglx12PslUzeC8SsiMNm",
+              "name": "get_common_info"
+            }
+          ],
+          "status": "completed",
+          "user": null,
+          "service_tier": "default",
+          "model_name": "gpt-5.1-2025-11-13"
+        },
+        "name": "main_agent_sorra"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "ToolMessage"
+      ],
+      "kwargs": {
+        "status": "success",
+        "content": {
+          "query": "capital city of Malaysia",
+          "title": "List of cities in Malaysia",
+          "description": "",
+          "answer": "In Malaysia, cities are officially designated under the governance of city councils, although there are several exceptions. As of 2024, 20 areas in the country are officially termed cities by law. Among them, 16 are from Peninsular Malaysia, while 3 are from East Malaysia. George Town, the capital city of Penang, was declared a city on 1 January 1957 by Elizabeth II, Queen of the United Kingdom, making it the first city in the country, and the only city declared before Malayan independence. George Town remained the sole city of Malaya until 1963, when Singapore was formally incorporated into Malaysia. However, Singapore's expulsion in 1965 meant that George Town would remain Malaysia's only city until Kuala Lumpur's declaration as a city in 1972, by Abdul Halim of Kedah, the fifth Yang di-Pertuan Agong of Malaysia. In 1988, Kuching was chartered as the first city in East Malaysia. Klang is the most recent municipality in the country declared a city, doing so on 5 February 2024.",
+          "url": "https://en.wikipedia.org/wiki/List_of_cities_in_Malaysia",
+          "success": true
+        },
+        "tool_call_id": "call_IoFgnglx12PslUzeC8SsiMNm",
+        "name": "get_common_info",
+        "metadata": {
+          "versions": {
+            "@langchain/core": "1.2.9"
+          }
+        },
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "id": "b223b665-b5df-4bf0-b7e6-4f024e28446c"
+      }
+    },
+    {
+      "lc": 1,
+      "type": "constructor",
+      "id": [
+        "langchain_core",
+        "messages",
+        "AIMessage"
+      ],
+      "kwargs": {
+        "id": "resp_02e5a4c04f4f415e006ad825bbb61087d0a5f1d260701475ba",
+        "content": [
+          {
+            "type": "text",
+            "text": "Ibukota Malaysia adalah Kuala Lumpur.",
+            "annotations": []
+          }
+        ],
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": {
+          "input_tokens": 8627,
+          "output_tokens": 12,
+          "total_tokens": 8639,
+          "input_token_details": {
+            "cache_read": 8192,
+            "cache_creation": 0
+          },
+          "output_token_details": {
+            "reasoning": 0
+          }
+        },
+        "additional_kwargs": {},
+        "response_metadata": {
+          "id": "resp_02e5a4c04f4f415e006ad825bbb61087d0a5f1d260701475ba",
+          "estimatedTokenUsage": {
+            "promptTokens": 8627,
+            "completionTokens": 12,
+            "totalTokens": 8639
+          },
+          "model_provider": "openai",
+          "model": "gpt-5.1-2025-11-13",
+          "created_at": 1792550331,
+          "incomplete_details": null,
+          "metadata": {},
+          "object": "response",
+          "output": [
+            {
+              "id": "msg_02e5a4c04f4f415e006ad825bc9ec887d08ba11576742ba466",
+              "type": "message",
+              "status": "completed",
+              "content": [
+                {
+                  "type": "output_text",
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "Ibukota Malaysia adalah Kuala Lumpur."
+                }
+              ],
+              "role": "assistant"
+            }
+          ],
+          "status": "completed",
+          "user": null,
+          "service_tier": "default",
+          "model_name": "gpt-5.1-2025-11-13"
+        },
+        "name": "main_agent_sorra"
+      }
+    }
+  ],
+  "todos": []
+}
