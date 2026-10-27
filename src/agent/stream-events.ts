@@ -51,10 +51,30 @@ export type AgentStreamEvent =
 export const WRITE_TODOS_TOOL = "write_todos";
 const TOOL_RESULT_MAX_LENGTH = 4000;
 
-export const truncateResult = (text: string) =>
+const truncateText = (text: string) =>
   text.length > TOOL_RESULT_MAX_LENGTH
-    ? text.slice(0, TOOL_RESULT_MAX_LENGTH)
+    ? `${text.slice(0, TOOL_RESULT_MAX_LENGTH)}…`
     : text;
+
+const truncateStrings = (value: unknown): unknown => {
+  if (typeof value === "string") return truncateText(value);
+  if (Array.isArray(value)) return value.map(truncateStrings);
+  if (value && typeof value === "object")
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, truncateStrings(item)]),
+    );
+  return value;
+};
+
+// Hasil JSON dipotong per nilai string supaya tetap valid dan bisa di-parse UI.
+export const truncateResult = (text: string) => {
+  if (text.length <= TOOL_RESULT_MAX_LENGTH) return text;
+  try {
+    return JSON.stringify(truncateStrings(JSON.parse(text)));
+  } catch {
+    return truncateText(text);
+  }
+};
 
 // Tool bawaan OpenAI (web_search) tidak masuk `tool_calls`, hanya ada di contentBlocks.
 export const getServerToolBlocks = (message: AIMessage) => {
