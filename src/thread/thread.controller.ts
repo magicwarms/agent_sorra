@@ -2,7 +2,8 @@ import Elysia, { StatusMap, t } from "elysia";
 import { standardResponse } from "../utils/utils";
 import { ElysiaError, formatError } from "../utils/error-handling";
 import { authGuard, jwtConfig } from "../auth/guard.service";
-import { getAllThreads } from "../thread/thread.service";
+import { getAllThreads, getThreadByIdAndUser } from "../thread/thread.service";
+import { getThreadHistory } from "../agent/agent.service";
 import { addKnowledge, findKnowledge } from "../embedding/embedding.service";
 import { COLLECTION_NAME } from "../utils/enum";
 
@@ -10,9 +11,13 @@ export const threadController = new Elysia({
   prefix: "/threads",
   detail: { tags: ["Thread"] },
 })
-  .use(jwtConfig)
+  .use(jwtConfig())
   .error({ ElysiaError })
-  .onError(({ code, error }) => new ElysiaError(formatError(error), code))
+  .onError(({ code, error }) =>
+    error instanceof ElysiaError
+      ? error
+      : new ElysiaError(formatError(error), code),
+  )
   .guard(
     {
       detail: {
@@ -85,6 +90,36 @@ export const threadController = new Elysia({
             response: standardResponse.response,
             detail: {
               summary: "Get all user threads",
+            },
+          },
+        )
+        .get(
+          "/:threadId/messages",
+          async ({ user, params }) => {
+            const thread = await getThreadByIdAndUser(
+              params.threadId,
+              user.userId,
+            );
+            if (!thread)
+              throw new ElysiaError(
+                "Percakapan ini tidak ditemukan.",
+                "NOT_FOUND",
+                404,
+              );
+
+            const history = await getThreadHistory(thread.id);
+
+            return {
+              success: true,
+              data: { thread, ...history },
+              message: "success",
+            };
+          },
+          {
+            params: t.Object({ threadId: t.String() }),
+            response: standardResponse.response,
+            detail: {
+              summary: "Get thread messages and todos",
             },
           },
         ),

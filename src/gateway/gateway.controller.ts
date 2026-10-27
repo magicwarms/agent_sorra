@@ -1,30 +1,22 @@
-import Elysia, { StatusMap, t } from "elysia";
+import Elysia, { sse, StatusMap, t } from "elysia";
 import { standardResponse } from "../utils/utils";
 import { ElysiaError, formatError } from "../utils/error-handling";
 import { authGuard, jwtConfig } from "../auth/guard.service";
 import { GatewayDTO } from "./gateway.dto";
-import { chatWithAgent } from "../agent/agent.service";
+import { chatWithAgent, streamChatWithAgent } from "../agent/agent.service";
 import { updateThreadToken } from "../thread/thread.service";
 
 export const gatewayController = new Elysia({
   prefix: "/gateway",
   detail: { tags: ["Gateway"] },
 })
-  .use(jwtConfig)
+  .use(jwtConfig())
   .error({ ElysiaError })
-  .onError(({ code, error }) => new ElysiaError(formatError(error), code))
-  .onAfterResponse(({ responseValue }) => {
-    const {
-      data: { threadId, usage },
-    } = responseValue as {
-      data: { threadId: string; usage: { totalTokens: number } };
-    };
-    updateThreadToken(threadId, usage.totalTokens).then((data) =>
-      data
-        ? console.log("update token success")
-        : console.log("update token failed"),
-    );
-  })
+  .onError(({ code, error }) =>
+    error instanceof ElysiaError
+      ? error
+      : new ElysiaError(formatError(error), code),
+  )
   .guard(
     {
       detail: {
@@ -61,6 +53,11 @@ export const gatewayController = new Elysia({
               threadId: body.threadId,
               name: user.name.trim(),
             });
+            if (conversation.usage.totalTokens > 0)
+              updateThreadToken(
+                conversation.threadId,
+                conversation.usage.totalTokens,
+              ).catch(console.error);
 
             return {
               success: true,
@@ -74,6 +71,41 @@ export const gatewayController = new Elysia({
             detail: {
               summary: "Gateway chat for users to start the conversation",
             },
+          },
+        )
+        .post(
+          "/stream",
+          async function* ({ user, body, request }) {
+            try {
+              for await (const event of streamChatWithAgent(
+                {
+                  userId: user.userId,
+                  email: user.email.trim(),
+                  name: user.name.trim(),
+                  message: body.message,
+                  threadId: body.threadId,
+                },
+                request.signal,
+              ))
+                yield sse(event);
+            } catch (error) {
+              if (!request.signal.aborted) {
+                console.error(error);
+                yield sse({
+                  event: "error",
+                  data: {
+                    message:
+                      error instanceof ElysiaError && error.statusCode === 404
+                        ? error.message
+                        : "Agent gagal menjawab. Coba kirim ulang.",
+                  },
+                });
+              }
+            }
+          },
+          {
+            body: t.Object(GatewayDTO),
+            detail: { summary: "Stream chat with agent (SSE)" },
           },
         ),
   );

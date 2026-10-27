@@ -9,7 +9,7 @@ export const userController = new Elysia({
   prefix: "/users",
   detail: { tags: ["User"] },
 })
-  .use(jwtConfig)
+  .use(jwtConfig())
   .error({ ElysiaError })
   .onError(({ code, error }) => new ElysiaError(formatError(error), code))
   .post(

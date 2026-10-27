@@ -3,7 +3,17 @@ import { Prisma } from "../generated/prisma";
 import { FindAllThreadDTO } from "./thread.dto";
 
 export const createThread = async (data: Prisma.ThreadCreateInput) => {
-  return await prisma.thread.create({ data, select: { id: true } });
+  return await prisma.thread.create({
+    data,
+    select: { id: true, title: true },
+  });
+};
+
+export const findThreadByIdAndUser = async (id: string, userId: string) => {
+  return await prisma.thread.findFirst({
+    where: { id, userId },
+    select: { id: true, title: true },
+  });
 };
 
 export const findAllThreads = async (payload: FindAllThreadDTO) => {
@@ -32,6 +42,6 @@ export const updateTotalTokenUsageByThreadId = async (
 ) => {
   return await prisma.thread.update({
     where: { id: threadId },
-    data: { totalToken },
+    data: { totalToken: { increment: totalToken } },
   });
 };

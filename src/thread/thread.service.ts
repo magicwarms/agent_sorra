@@ -4,6 +4,7 @@ import {
   countAllThread,
   createThread,
   findAllThreads,
+  findThreadByIdAndUser,
   updateTotalTokenUsageByThreadId,
 } from "./thread.repository";
 
@@ -15,6 +16,10 @@ export const storeThread = async (data: CreateThreadDTO) => {
     title: data.title,
   };
   return await createThread(storeData);
+};
+
+export const getThreadByIdAndUser = async (id: string, userId: string) => {
+  return await findThreadByIdAndUser(id, userId);
 };
 
 export const getAllThreads = async (payload: FindAllThreadDTO) => {
