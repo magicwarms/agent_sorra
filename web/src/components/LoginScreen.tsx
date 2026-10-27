@@ -1,13 +1,33 @@
 import { useState, type FormEvent } from "react";
-import { ApiError, login } from "../lib/api";
+import { ApiError, login, NETWORK_ERROR, SERVER_ERROR } from "../lib/api";
 import { setToken } from "../lib/auth";
 import { ThemeToggle } from "./ThemeToggle";
 
 const CREDENTIAL_ERROR = "Email/username atau password salah.";
-const NETWORK_ERROR = "Tidak bisa terhubung ke server.";
 
-export const LoginScreen = ({ onLoggedIn }: { onLoggedIn: () => void }) => {
-  const [identifier, setIdentifier] = useState("");
+const loginError = (failure: unknown) => {
+  if (!(failure instanceof ApiError)) return NETWORK_ERROR;
+  return failure.status === 401 || failure.status === 400
+    ? CREDENTIAL_ERROR
+    : SERVER_ERROR;
+};
+
+type Props = {
+  onLoggedIn: () => void;
+  onSwitch: () => void;
+  initialIdentifier?: string;
+  notice?: string;
+  autoFocus?: boolean;
+};
+
+export const LoginScreen = ({
+  onLoggedIn,
+  onSwitch,
+  initialIdentifier = "",
+  notice,
+  autoFocus = false,
+}: Props) => {
+  const [identifier, setIdentifier] = useState(initialIdentifier);
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,8 +42,7 @@ export const LoginScreen = ({ onLoggedIn }: { onLoggedIn: () => void }) => {
       setToken(token);
       onLoggedIn();
     } catch (failure) {
-      // Backend membalas salah password dengan HTTP 500 ("Invalid username or password").
-      setError(failure instanceof ApiError ? CREDENTIAL_ERROR : NETWORK_ERROR);
+      setError(loginError(failure));
       setPending(false);
     }
   };
@@ -35,6 +54,11 @@ export const LoginScreen = ({ onLoggedIn }: { onLoggedIn: () => void }) => {
       </div>
       <form className="login-form" onSubmit={submit}>
         <h1>Masuk ke Sorra</h1>
+        {notice && (
+          <p className="form-note" role="status">
+            {notice}
+          </p>
+        )}
         <label className="field">
           <span>Email atau username</span>
           <input
@@ -42,6 +66,7 @@ export const LoginScreen = ({ onLoggedIn }: { onLoggedIn: () => void }) => {
             autoComplete="username"
             autoCapitalize="none"
             spellCheck={false}
+            autoFocus={autoFocus && !initialIdentifier}
             required
             value={identifier}
             onChange={(event) => setIdentifier(event.target.value)}
@@ -53,6 +78,7 @@ export const LoginScreen = ({ onLoggedIn }: { onLoggedIn: () => void }) => {
             name="password"
             type="password"
             autoComplete="current-password"
+            autoFocus={autoFocus && !!initialIdentifier}
             required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
@@ -65,6 +91,9 @@ export const LoginScreen = ({ onLoggedIn }: { onLoggedIn: () => void }) => {
         )}
         <button type="submit" className="btn btn-primary" disabled={pending}>
           {pending ? "Masuk…" : "Masuk"}
+        </button>
+        <button type="button" className="link-button" onClick={onSwitch}>
+          Belum punya akun? Daftar
         </button>
       </form>
     </main>

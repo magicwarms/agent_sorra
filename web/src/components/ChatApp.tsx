@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAgentChat } from "../hooks/useAgentChat";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { useThreads } from "../hooks/useThreads";
+import { formatTokens } from "../lib/format";
 import { Composer } from "./Composer";
 import { MessageList } from "./MessageList";
 import { ThreadSidebar } from "./ThreadSidebar";
@@ -21,11 +22,12 @@ const writeThreadParam = (threadId: string | null) => {
 
 export const ChatApp = ({ onLogout }: { onLogout: () => void }) => {
   const threads = useThreads();
-  const { prepend } = threads;
+  const { prepend, addTokens } = threads;
   const chat = useAgentChat({
     onThread: (thread) => {
       if (thread.isNew) prepend(thread);
     },
+    onDone: ({ threadId, usage }) => addTokens(threadId, usage.totalTokens),
   });
   const { load, reset } = chat;
 
@@ -120,11 +122,17 @@ export const ChatApp = ({ onLogout }: { onLogout: () => void }) => {
             Percakapan
           </button>
           <h1 className="topbar-title">{heading}</h1>
+          {chat.threadId && chat.totalToken > 0 && (
+            <span className="topbar-usage">
+              {formatTokens(chat.totalToken)} token
+            </span>
+          )}
         </header>
         <MessageList
           key={chat.epoch}
           messages={chat.messages}
           status={chat.status}
+          pendingBreak={chat.pendingBreak}
           stoppedId={chat.stoppedId}
           error={chat.error}
           onRetry={chat.retry}

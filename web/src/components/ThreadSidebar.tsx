@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import type { ThreadsStatus } from "../hooks/useThreads";
-import { formatRelativeDate } from "../lib/format";
+import { formatRelativeDate, formatTokens } from "../lib/format";
 import type { Thread } from "../types";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -75,6 +75,8 @@ export const ThreadSidebar = forwardRef<HTMLElement, Props>(
                   <span className="thread-title">{thread.title}</span>
                   <span className="thread-date">
                     {formatRelativeDate(thread.createdAt)}
+                    {thread.totalToken > 0 &&
+                      ` · ${formatTokens(thread.totalToken)} token`}
                   </span>
                 </button>
               </li>

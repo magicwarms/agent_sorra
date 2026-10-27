@@ -17,7 +17,7 @@ export type CreateUserType = {
   name: string;
   email: string;
   password: string;
-  username: string;
+  username?: string;
 };
 
 export const LoginUserDTO = {

@@ -1,6 +1,7 @@
 import { memo } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { formatUsage } from "../lib/format";
 import type { UiMessage } from "../types";
 import { ToolCallRow } from "./ToolCallRow";
 
@@ -32,17 +33,31 @@ const Markdown = memo(
   ),
 );
 
+const Pending = ({ label }: { label: string }) => (
+  <p className="status">
+    <span className="dots" aria-hidden="true">
+      <span />
+      <span />
+      <span />
+    </span>
+    {label}
+  </p>
+);
+
 type Props = {
   message: AssistantMessageData;
   live: boolean;
   preparing: boolean;
+  afterTool: boolean;
   stopped: boolean;
 };
 
 export const AssistantMessage = memo(
-  ({ message, live, preparing, stopped }: Props) => {
-    const { text, toolCalls } = message;
+  ({ message, live, preparing, afterTool, stopped }: Props) => {
+    const { text, toolCalls, usage } = message;
     const toolRunning = toolCalls.some((toolCall) => toolCall.status === "running");
+    // Jeda tanpa token: sebelum token pertama, atau setelah tool selesai sampai teks berikutnya.
+    const waiting = live && !preparing && !toolRunning && (!text || afterTool);
     if (!text && toolCalls.length === 0 && !live && !stopped) return null;
 
     return (
@@ -54,17 +69,13 @@ export const AssistantMessage = memo(
             ))}
           </div>
         )}
-        {text && <Markdown text={text} streaming={live} />}
-        {live && preparing && (
-          <p className="status">
-            <span className="spinner" aria-hidden="true" />
-            Menyiapkan percakapan…
-          </p>
-        )}
-        {live && !preparing && !text && !toolRunning && (
-          <span className="caret" aria-hidden="true" />
-        )}
+        {text && <Markdown text={text} streaming={live && !waiting} />}
+        {live && preparing && <Pending label="Menyiapkan percakapan…" />}
+        {waiting && <Pending label="Menyusun jawaban…" />}
         {stopped && <p className="note">Dihentikan.</p>}
+        {!live && usage && usage.totalTokens > 0 && (
+          <p className="usage">{formatUsage(usage)}</p>
+        )}
       </div>
     );
   },

@@ -19,7 +19,13 @@ export type UiToolCall = {
 export type UiMessage =
   | { id: string; role: "user"; text: string }
   | { id: string; role: "summary"; text: string }
-  | { id: string; role: "assistant"; text: string; toolCalls: UiToolCall[] };
+  | {
+      id: string;
+      role: "assistant";
+      text: string;
+      toolCalls: UiToolCall[];
+      usage?: Usage;
+    };
 export type Usage = {
   promptTokens: number;
   completionTokens: number;
@@ -106,14 +112,45 @@ export const getServerToolBlocks = (message: AIMessage) => {
   return { calls, results };
 };
 
+type UiAssistantMessage = Extract<UiMessage, { role: "assistant" }>;
+
+const toUsage = (message: AIMessage): Usage | undefined => {
+  const metadata = message.usage_metadata;
+  return metadata
+    ? {
+        promptTokens: metadata.input_tokens,
+        completionTokens: metadata.output_tokens,
+        totalTokens: metadata.total_tokens,
+      }
+    : undefined;
+};
+
+const sumUsage = (
+  first: Usage | undefined,
+  second: Usage | undefined,
+): Usage | undefined =>
+  first && second
+    ? {
+        promptTokens: first.promptTokens + second.promptTokens,
+        completionTokens: first.completionTokens + second.completionTokens,
+        totalTokens: first.totalTokens + second.totalTokens,
+      }
+    : (first ?? second);
+
 export const toUiMessages = (messages: BaseMessage[]): UiMessage[] => {
   const uiMessages: UiMessage[] = [];
   const toolCallsById = new Map<string, UiToolCall>();
+  // Pemakaian token AIMessage yang tidak tampil (mis. hanya write_todos) dititipkan
+  // ke pesan asisten lain dalam giliran yang sama, supaya total per giliran tetap utuh.
+  let turnAssistant: UiAssistantMessage | undefined;
+  let carriedUsage: Usage | undefined;
 
   messages.forEach((message, index) => {
     const id = message.id ?? `message-${index}`;
 
     if (HumanMessage.isInstance(message)) {
+      turnAssistant = undefined;
+      carriedUsage = undefined;
       uiMessages.push({
         id,
         role:
@@ -147,10 +184,25 @@ export const toUiMessages = (messages: BaseMessage[]): UiMessage[] => {
 
       const toolCalls = [...functionCalls, ...serverCalls];
       const text = message.text;
-      if (!text && toolCalls.length === 0) return;
+      const usage = toUsage(message);
+      if (!text && toolCalls.length === 0) {
+        if (turnAssistant)
+          turnAssistant.usage = sumUsage(turnAssistant.usage, usage);
+        else carriedUsage = sumUsage(carriedUsage, usage);
+        return;
+      }
 
       toolCalls.forEach((toolCall) => toolCallsById.set(toolCall.id, toolCall));
-      uiMessages.push({ id, role: "assistant", text, toolCalls });
+      const assistant: UiAssistantMessage = {
+        id,
+        role: "assistant",
+        text,
+        toolCalls,
+        usage: sumUsage(carriedUsage, usage),
+      };
+      carriedUsage = undefined;
+      turnAssistant = assistant;
+      uiMessages.push(assistant);
       return;
     }
 

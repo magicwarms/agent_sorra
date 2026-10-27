@@ -246,6 +246,33 @@ p {
   font-size: 0.9375rem;
 }
 
+.form-note {
+  font-size: 0.9375rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-hint {
+  color: var(--ink-2);
+  font-size: 0.875rem;
+  text-wrap: pretty;
+}
+
+.link-button {
+  align-self: center;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* App shell */
 
 .app {
@@ -421,6 +448,18 @@ p {
   font-size: 0.875rem;
 }
 
+.usage,
+.topbar-usage {
+  color: var(--ink-2);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.topbar-usage {
+  flex: none;
+  white-space: nowrap;
+}
+
 .msg {
   animation: rise 120ms ease-out both;
 }
@@ -590,7 +629,7 @@ p {
   overflow-wrap: anywhere;
 }
 
-/* Spinner and caret */
+/* Spinner, dots and caret */
 
 .spinner {
   flex: none;
@@ -602,7 +641,28 @@ p {
   animation: spin 800ms linear infinite;
 }
 
-.caret,
+.dots {
+  display: inline-flex;
+  flex: none;
+  gap: 4px;
+}
+
+.dots > span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: hop 1s ease-in-out infinite;
+}
+
+.dots > span:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.dots > span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
 .md.is-streaming > :last-child:not(ul, ol, pre, blockquote, .table-wrap)::after,
 .md.is-streaming > :is(ul, ol):last-child > li:last-child::after {
   content: "";
@@ -613,10 +673,6 @@ p {
   background: var(--accent);
   vertical-align: text-bottom;
   animation: blink 1s steps(1) infinite;
-}
-
-.caret {
-  margin-left: 0;
 }
 
 /* Markdown */
@@ -940,6 +996,19 @@ p {
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes hop {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
   }
 }
 

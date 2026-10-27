@@ -15,6 +15,7 @@ const SummaryBlock = memo(({ text }: { text: string }) => (
 type Props = {
   messages: UiMessage[];
   status: ChatStatus;
+  pendingBreak: boolean;
   stoppedId: string | null;
   error: ChatError | null;
   onRetry: () => void;
@@ -23,6 +24,7 @@ type Props = {
 export const MessageList = ({
   messages,
   status,
+  pendingBreak,
   stoppedId,
   error,
   onRetry,
@@ -74,6 +76,7 @@ export const MessageList = ({
               message={message}
               live={busy && message.id === lastId}
               preparing={status === "preparing"}
+              afterTool={pendingBreak}
               stopped={message.id === stoppedId}
             />
           );

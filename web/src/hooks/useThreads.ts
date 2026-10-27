@@ -71,5 +71,25 @@ export const useThreads = () => {
     [],
   );
 
-  return { items, status, hasNextPage, loadingMore, loadMore, prepend };
+  const addTokens = useCallback(
+    (threadId: string, amount: number) =>
+      setItems((current) =>
+        current.map((item) =>
+          item.id === threadId
+            ? { ...item, totalToken: item.totalToken + amount }
+            : item,
+        ),
+      ),
+    [],
+  );
+
+  return {
+    items,
+    status,
+    hasNextPage,
+    loadingMore,
+    loadMore,
+    prepend,
+    addTokens,
+  };
 };

@@ -1,9 +1,28 @@
 import Elysia, { StatusMap, t } from "elysia";
+import { isAPIError } from "better-auth/api";
 import { CreateUserDTO, LoginUserDTO } from "./user.dto";
 import { loginUser, storeUser } from "./user.service";
 import { standardResponse } from "../utils/utils";
 import { ElysiaError, formatError } from "../utils/error-handling";
 import { authGuard, jwtConfig } from "../auth/guard.service";
+
+const DUPLICATE_CODES = new Set([
+  "USER_ALREADY_EXISTS",
+  "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL",
+  "USERNAME_IS_ALREADY_TAKEN",
+]);
+
+// better-auth melempar APIError dengan status sendiri; duplikat email/username dijadikan 409.
+const toUserError = (error: unknown, code: unknown) => {
+  if (error instanceof ElysiaError) return error;
+  if (isAPIError(error)) {
+    const authCode = error.body?.code;
+    const status =
+      authCode && DUPLICATE_CODES.has(authCode) ? 409 : error.statusCode;
+    return new ElysiaError(formatError(error), authCode ?? code, status);
+  }
+  return new ElysiaError(formatError(error), code);
+};
 
 export const userController = new Elysia({
   prefix: "/users",
@@ -11,16 +30,17 @@ export const userController = new Elysia({
 })
   .use(jwtConfig())
   .error({ ElysiaError })
-  .onError(({ code, error }) => new ElysiaError(formatError(error), code))
+  .onError(({ code, error }) => toUserError(error, code))
   .post(
     "/",
     async ({ body, headers }) => {
+      const username = body.username?.trim();
       const user = await storeUser(
         {
           name: body.name,
           email: body.email,
           password: body.password,
-          username: body.username || "",
+          ...(username ? { username } : {}),
         },
         headers,
       );

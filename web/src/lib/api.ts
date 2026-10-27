@@ -3,11 +3,15 @@ import { clearToken, getToken } from "./auth";
 
 const PATHS = {
   login: "/v1/users/login",
+  register: "/v1/users",
   threads: "/v1/threads",
   threadMessages: (id: string) =>
     `/v1/threads/${encodeURIComponent(id)}/messages`,
   stream: "/v1/gateway/stream",
 } as const;
+
+export const SERVER_ERROR = "Server sedang bermasalah. Coba lagi sebentar.";
+export const NETWORK_ERROR = "Tidak bisa terhubung ke server.";
 
 export class ApiError extends Error {
   status: number;
@@ -74,6 +78,18 @@ export const login = (identifier: string, password: string) =>
         ? { email: identifier, password }
         : { username: identifier, password },
     ),
+  });
+
+export const register = (body: {
+  name: string;
+  email: string;
+  password: string;
+  username?: string;
+}) =>
+  request<{ user: User }>(PATHS.register, {
+    method: "POST",
+    auth: false,
+    body: JSON.stringify(body),
   });
 
 export const listThreads = async (

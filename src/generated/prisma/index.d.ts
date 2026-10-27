@@ -9565,16 +9565,16 @@ export namespace Prisma {
 
   export type ThreadWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    title?: string
     AND?: ThreadWhereInput | ThreadWhereInput[]
     OR?: ThreadWhereInput[]
     NOT?: ThreadWhereInput | ThreadWhereInput[]
+    title?: StringFilter<"Thread"> | string
     userId?: StringFilter<"Thread"> | string
     totalToken?: IntFilter<"Thread"> | number
     createdAt?: DateTimeFilter<"Thread"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     messages?: MessageListRelationFilter
-  }, "id" | "title">
+  }, "id">
 
   export type ThreadOrderByWithAggregationInput = {
     id?: SortOrder

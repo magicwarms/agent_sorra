@@ -1,4 +1,4 @@
-import type { UiMessage, UiToolCall } from "../types";
+import type { UiMessage, UiToolCall, Usage } from "../types";
 
 const relative = new Intl.RelativeTimeFormat("id", { numeric: "auto" });
 const absolute = new Intl.DateTimeFormat("id", {
@@ -6,6 +6,13 @@ const absolute = new Intl.DateTimeFormat("id", {
   month: "short",
   year: "numeric",
 });
+
+const numbers = new Intl.NumberFormat("id-ID");
+
+export const formatTokens = (count: number): string => numbers.format(count);
+
+export const formatUsage = (usage: Usage): string =>
+  `${formatTokens(usage.totalTokens)} token (masuk ${formatTokens(usage.promptTokens)}, keluar ${formatTokens(usage.completionTokens)})`;
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
@@ -34,6 +41,18 @@ export const failRunningTools = (toolCalls: UiToolCall[]): UiToolCall[] =>
       )
     : toolCalls;
 
+const sumUsage = (
+  first: Usage | undefined,
+  second: Usage | undefined,
+): Usage | undefined =>
+  first && second
+    ? {
+        promptTokens: first.promptTokens + second.promptTokens,
+        completionTokens: first.completionTokens + second.completionTokens,
+        totalTokens: first.totalTokens + second.totalTokens,
+      }
+    : (first ?? second);
+
 // Riwayat memisahkan AIMessage pemanggil tool dan AIMessage jawaban akhir.
 // Stream live menyusun satu blok per giliran, jadi riwayat digabung dengan cara yang sama.
 export const groupAssistantRuns = (messages: UiMessage[]): UiMessage[] => {
@@ -45,6 +64,7 @@ export const groupAssistantRuns = (messages: UiMessage[]): UiMessage[] => {
         ...previous,
         text: [previous.text, message.text].filter(Boolean).join("\n\n"),
         toolCalls: [...previous.toolCalls, ...message.toolCalls],
+        usage: sumUsage(previous.usage, message.usage),
       };
       grouped[grouped.length - 1] = merged;
     } else {

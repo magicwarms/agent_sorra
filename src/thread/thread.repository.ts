@@ -12,7 +12,7 @@ export const createThread = async (data: Prisma.ThreadCreateInput) => {
 export const findThreadByIdAndUser = async (id: string, userId: string) => {
   return await prisma.thread.findFirst({
     where: { id, userId },
-    select: { id: true, title: true },
+    select: { id: true, title: true, totalToken: true },
   });
 };
 

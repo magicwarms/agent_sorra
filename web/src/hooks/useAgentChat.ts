@@ -3,7 +3,7 @@ import { EventSourceParserStream } from "eventsource-parser/stream";
 import type { EventSourceMessage } from "eventsource-parser";
 import { ApiError, getThreadMessages, streamChat } from "../lib/api";
 import { failRunningTools, groupAssistantRuns } from "../lib/format";
-import type { AgentStreamEvent, Todo, UiMessage } from "../types";
+import type { AgentStreamEvent, Todo, UiMessage, Usage } from "../types";
 
 export const NOT_FOUND = "Percakapan ini tidak ditemukan.";
 export const CONNECTION_LOST = "Koneksi ke agent terputus.";
@@ -17,10 +17,12 @@ export type ChatStatus =
 export type ChatError = { message: string; retryable: boolean };
 type AssistantMessage = Extract<UiMessage, { role: "assistant" }>;
 type ThreadInfo = Extract<AgentStreamEvent, { event: "thread" }>["data"];
+type DoneInfo = { threadId: string; usage: Usage };
 
 type State = {
   threadId: string | null;
   title: string | null;
+  totalToken: number;
   messages: UiMessage[];
   todos: Todo[];
   status: ChatStatus;
@@ -35,7 +37,7 @@ type Action =
   | { type: "load_start"; threadId: string }
   | {
       type: "load_done";
-      thread: { id: string; title: string };
+      thread: { id: string; title: string; totalToken: number };
       messages: UiMessage[];
       todos: Todo[];
     }
@@ -49,6 +51,7 @@ type Action =
 const initialState: State = {
   threadId: null,
   title: null,
+  totalToken: 0,
   messages: [],
   todos: [],
   status: "idle",
@@ -101,6 +104,7 @@ const applyEvent = (state: State, event: AgentStreamEvent): State => {
         ...state,
         threadId: event.data.threadId,
         title: event.data.title,
+        totalToken: event.data.isNew ? 0 : state.totalToken,
         status: "streaming",
       };
     case "token": {
@@ -151,8 +155,18 @@ const applyEvent = (state: State, event: AgentStreamEvent): State => {
     }
     case "todos":
       return { ...state, todos: event.data.todos };
-    case "done":
-      return { ...state, status: "idle" };
+    case "done": {
+      const { usage } = event.data;
+      return {
+        ...state,
+        status: "idle",
+        totalToken: state.totalToken + usage.totalTokens,
+        messages: updateLastAssistant(state.messages, (message) => ({
+          ...message,
+          usage,
+        })),
+      };
+    }
     case "error":
       return fail(state, {
         message: event.data.message,
@@ -177,6 +191,7 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         threadId: action.thread.id,
         title: action.thread.title,
+        totalToken: action.thread.totalToken,
         messages: action.messages,
         todos: action.todos,
         status: "idle",
@@ -265,10 +280,15 @@ const newId = () =>
 
 export const useAgentChat = ({
   onThread,
-}: { onThread?: (thread: ThreadInfo) => void } = {}) => {
+  onDone,
+}: {
+  onThread?: (thread: ThreadInfo) => void;
+  onDone?: (done: DoneInfo) => void;
+} = {}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const stateRef = useRef(state);
   const onThreadRef = useRef(onThread);
+  const onDoneRef = useRef(onDone);
   const abortRef = useRef<AbortController | null>(null);
   const runRef = useRef(0);
   const loadRef = useRef(0);
@@ -276,6 +296,7 @@ export const useAgentChat = ({
   useEffect(() => {
     stateRef.current = state;
     onThreadRef.current = onThread;
+    onDoneRef.current = onDone;
   });
 
   useEffect(
@@ -307,6 +328,7 @@ export const useAgentChat = ({
 
     try {
       const threadId = stateRef.current.threadId;
+      let activeThreadId = threadId;
       const response = await streamChat(
         { message: text, ...(threadId ? { threadId } : {}) },
         controller.signal,
@@ -326,7 +348,16 @@ export const useAgentChat = ({
         const event = parseEvent(value);
         if (!event) continue;
         if (event.event === "done" || event.event === "error") finished = true;
-        if (event.event === "thread") onThreadRef.current?.(event.data);
+        if (event.event === "thread") {
+          activeThreadId = event.data.threadId;
+          onThreadRef.current?.(event.data);
+        }
+        if (event.event === "done" && activeThreadId) {
+          onDoneRef.current?.({
+            threadId: activeThreadId,
+            usage: event.data.usage,
+          });
+        }
         dispatch({ type: "event", event });
       }
       if (!finished && isLive()) {

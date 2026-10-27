@@ -13,7 +13,13 @@ export type UiToolCall = {
 export type UiMessage =
   | { id: string; role: "user"; text: string }
   | { id: string; role: "summary"; text: string }
-  | { id: string; role: "assistant"; text: string; toolCalls: UiToolCall[] };
+  | {
+      id: string;
+      role: "assistant";
+      text: string;
+      toolCalls: UiToolCall[];
+      usage?: Usage;
+    };
 export type Usage = {
   promptTokens: number;
   completionTokens: number;
@@ -61,7 +67,7 @@ export type ThreadMeta = {
   hasPreviousPage: boolean;
 };
 export type ThreadHistory = {
-  thread: { id: string; title: string };
+  thread: { id: string; title: string; totalToken: number };
   messages: UiMessage[];
   todos: Todo[];
 };
