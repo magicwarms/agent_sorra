@@ -76,6 +76,7 @@ const createMainAgent = (name: string, email: string) =>
       model: process.env.OPENAI_MODEL as string,
       user: name,
       tags: [MAIN_MODEL_TAG],
+      maxTokens: 1000,
     }),
     tools: [
       tools.webSearch({
